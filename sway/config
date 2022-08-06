@@ -50,6 +50,9 @@ output * scale 2
 exec flameshot
 exec mako
 exec --no-startup-id fcitx5 -d -r
+# swayidle to lock session
+exec swayidle -w timeout 1800 'swaylock.sh' timeout 2000 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock.sh'
+
 
 ### Input configuration
 #
