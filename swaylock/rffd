@@ -1,0 +1,41 @@
+#!/usr/bin/python3
+
+"""
+This scripts returns a random file path from given directory.
+Subdirectories are not being searched.
+"""
+
+import os
+import argparse
+import sys
+import random
+
+
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-p",
+                        "--path",
+                        type=str,
+                        default="",
+                        help="full path to draw the file from")
+
+    args = parser.parse_args()
+    if not args.path:
+        print("No patch specified")
+        sys.exit(1)
+
+    if not os.path.isdir(args.path):
+        print("{} is not a directory".format(args.path))
+        sys.exit(1)
+    else:
+        files = []
+        paths = os.listdir(args.path)
+        for p in paths:
+            if os.path.isfile(os.path.join(args.path, p)):
+                files.append(p)
+
+        print(os.path.join(args.path, files[random.randint(0, len(files)-1)]))
+
+
+if __name__ == '__main__':
+    main()
