@@ -9,4 +9,6 @@ chmod +x ~/.config/nwg-wrapper/swaylock-time.sh
 ```
 
 You may change the display name in `swaylock.sh` which is `Unknown-01` now. Try
-**wlr-randr** in case of wayland, and **xrandr** for xwayland.
+to get display name by **wlr-randr** in case of wayland, and **xrandr** for xwayland.
+
+[Source](https://forum.archlabslinux.com/t/script-output-over-a-random-image-in-swaylock/59440)
