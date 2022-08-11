@@ -25,7 +25,7 @@ set $menu wofi --show=drun --lines=5 --prompt="" --hide-scroll --insensitive --c
 ### Output configuration
 #
 # Default wallpaper (more resolutions are available in /usr/share/backgrounds/sway/)
-output * bg /usr/share/backgrounds/sway/LiSA3 fill
+# output * bg /usr/share/backgrounds/sway/LiSA3 fill
 # output * bg #16161d solid_color
 output * scale 2
 #
@@ -52,6 +52,8 @@ exec mako
 exec --no-startup-id fcitx5 -d -r
 # swayidle to lock session
 exec swayidle -w timeout 1800 'swaylock.sh' timeout 2000 'swaymsg "output * dpms off"' resume 'swaymsg "output * dpms on"' before-sleep 'swaylock.sh'
+# dynamical wallpapers
+exec /home/yuchanns/.config/sway/swaybg.sh
 
 
 ### Input configuration
