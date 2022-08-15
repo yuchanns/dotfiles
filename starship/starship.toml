@@ -9,6 +9,8 @@ $git_status\
 [](fg:#FCA17D bg:#86BBD8)\
 $nodejs\
 $rust\
+$golang\
+$php\
 [](fg:#86BBD8 bg:#33658A)\
 $time\
 [ ](fg:#33658A)\
@@ -48,6 +50,16 @@ format = '[[ $symbol ($version) ](bg:#86BBD8)]($style)'
 
 [rust]
 symbol = ""
+style = "bg:#86BBD8"
+format = '[[ $symbol ($version) ](bg:#86BBD8)]($style)'
+
+[golang]
+symbol = "ﳑ"
+style = "bg:#86BBD8"
+format = '[[ $symbol ($version) ](bg:#86BBD8)]($style)'
+
+[php]
+symbol = ""
 style = "bg:#86BBD8"
 format = '[[ $symbol ($version) ](bg:#86BBD8)]($style)'
 
