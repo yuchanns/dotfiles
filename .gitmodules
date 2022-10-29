@@ -1,6 +1,3 @@
 [submodule "nvim"]
 	path = nvim
 	url = https://github.com/yuchanns/nvim
-[submodule "yabai/simple-bar"]
-	path = yabai/simple-bar
-	url = https://github.com/Jean-Tinland/simple-bar.git

@@ -104,28 +104,28 @@ shift + alt - left   : yabai -m window --grid 1:2:0:0:1:1
 shift + cmd - n : yabai -m space --create && \
                   index="$(yabai -m query --spaces --display | jq 'map(select(."native-fullscreen" == 0))[-1].index')" && \
                   yabai -m window --space "${index}" && \
-                  yabai -m space --focus "${index}"
-shift + alt - 1 : yabai -m window --space "1" && yabai -m space --focus "1"
-shift + alt - 2 : yabai -m window --space "2" && yabai -m space --focus "2"
-shift + alt - 3 : yabai -m window --space "3" && yabai -m space --focus "3"
-shift + alt - 4 : yabai -m window --space "4" && yabai -m space --focus "4"
-shift + alt - 5 : yabai -m window --space "5" && yabai -m space --focus "5"
-shift + alt - 6 : yabai -m window --space "6" && yabai -m space --focus "6"
-shift + alt - 7 : yabai -m window --space "7" && yabai -m space --focus "7"
-shift + alt - 8 : yabai -m window --space "8" && yabai -m space --focus "8"
-shift + alt - 9 : yabai -m window --space "9" && yabai -m space --focus "9"
-shift + alt - 0 : yabai -m window --space "0" && yabai -m space --focus "0"
+                  yabai -m space --focus "${index}"; sketchybar --trigger windows_on_spaces
+shift + alt - 1 : yabai -m window --space "1" && yabai -m space --focus "1"; sketchybar --trigger windows_on_spaces
+shift + alt - 2 : yabai -m window --space "2" && yabai -m space --focus "2"; sketchybar --trigger windows_on_spaces
+shift + alt - 3 : yabai -m window --space "3" && yabai -m space --focus "3"; sketchybar --trigger windows_on_spaces
+shift + alt - 4 : yabai -m window --space "4" && yabai -m space --focus "4"; sketchybar --trigger windows_on_spaces
+shift + alt - 5 : yabai -m window --space "5" && yabai -m space --focus "5"; sketchybar --trigger windows_on_spaces
+shift + alt - 6 : yabai -m window --space "6" && yabai -m space --focus "6"; sketchybar --trigger windows_on_spaces
+shift + alt - 7 : yabai -m window --space "7" && yabai -m space --focus "7"; sketchybar --trigger windows_on_spaces
+shift + alt - 8 : yabai -m window --space "8" && yabai -m space --focus "8"; sketchybar --trigger windows_on_spaces
+shift + alt - 9 : yabai -m window --space "9" && yabai -m space --focus "9"; sketchybar --trigger windows_on_spaces
+shift + alt - 0 : yabai -m window --space "0" && yabai -m space --focus "0"; sketchybar --trigger windows_on_spaces
 
-alt - 1 : yabai -m space --focus "1"
-alt - 2 : yabai -m space --focus "2"
-alt - 3 : yabai -m space --focus "3"
-alt - 4 : yabai -m space --focus "4"
-alt - 5 : yabai -m space --focus "5"
-alt - 6 : yabai -m space --focus "6"
-alt - 7 : yabai -m space --focus "7"
-alt - 8 : yabai -m space --focus "8"
-alt - 9 : yabai -m space --focus "9"
-alt - 0 : yabai -m space --focus "0"
+alt - 1 : yabai -m space --focus "1"; sketchybar --trigger windows_on_spaces
+alt - 2 : yabai -m space --focus "2"; sketchybar --trigger windows_on_spaces
+alt - 3 : yabai -m space --focus "3"; sketchybar --trigger windows_on_spaces
+alt - 4 : yabai -m space --focus "4"; sketchybar --trigger windows_on_spaces
+alt - 5 : yabai -m space --focus "5"; sketchybar --trigger windows_on_spaces
+alt - 6 : yabai -m space --focus "6"; sketchybar --trigger windows_on_spaces
+alt - 7 : yabai -m space --focus "7"; sketchybar --trigger windows_on_spaces
+alt - 8 : yabai -m space --focus "8"; sketchybar --trigger windows_on_spaces
+alt - 9 : yabai -m space --focus "9"; sketchybar --trigger windows_on_spaces
+alt - 0 : yabai -m space --focus "0"; sketchybar --trigger windows_on_spaces
 
 # focus monitor
 ctrl + alt - h : yabai -m display --focus prev
@@ -151,21 +151,23 @@ shift + cmd - w : yabai -m window --resize top:0:20
 ctrl + alt - h : yabai -m window --insert west
 
 # toggle window zoom
-alt - d : yabai -m window --toggle zoom-parent
-alt - f : yabai -m window --toggle zoom-fullscreen
+alt - d : yabai -m window --toggle zoom-parent; sketchybar --trigger window_focus
+alt - f : yabai -m window --toggle zoom-fullscreen; sketchybar --trigger window_focus
 
 # toggle window split type
-alt - e : yabai -m window --toggle split
+alt - e : yabai -m window --toggle split; sketchybar --trigger windows_on_spaces
 
 # float / unfloat window and center on screen
 alt - t : yabai -m window --toggle float;\
-         yabai -m window --grid 4:4:1:1:2:2
+         yabai -m window --grid 4:4:1:1:2:2;\
+         sketchybar --trigger window_focus
 
 # toggle sticky(+float), topmost, picture-in-picture
 alt - p : yabai -m window --toggle sticky;\
           yabai -m window --toggle topmost;\
           yabai -m window --toggle pip
 # close window
-alt - q : yabai -m window --close
+alt - q : yabai -m window --close; sketchybar --trigger windows_on_spaces
 # screenshot
-shift + cmd - a : /Applications/flameshot.app/Contents/MacOS/flameshot gui
+shift + cmd - a : /usr/local/bin/flameshot gui
+alt - return : open -na /Applications/WezTerm.app; sketchybar --trigger windows_on_spaces

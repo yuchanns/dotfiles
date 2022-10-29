@@ -1,5 +1,4 @@
 ```bash
-cp ./.yabairc ~
+cp -r ../yabai ~/.config/yabai
 cp ./.skhdrc ~
-cp -r ./simple-bar $HOME/Library/Application\ Support/Übersicht/widgets/
 ```
