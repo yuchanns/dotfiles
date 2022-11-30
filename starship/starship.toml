@@ -23,7 +23,7 @@ style_root = "bg:#9A348E"
 format = '[ $user ]($style)'
 
 [directory]
-style = "fg:#1c2230 bg:#769ff0"
+style = "fg:#e3e5e5 bg:#769ff0"
 format = "[ $path ]($style)"
 truncation_length = 3
 truncation_symbol = "…/"
