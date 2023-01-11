@@ -41,7 +41,7 @@ return {
 	window_background_opacity = 0.9,
 	color_scheme = "tokyonight",
 	window_padding = {
-		left = 0,
+		left = 5,
 		right = 0,
 		top = 0,
 		bottom = 0,
@@ -54,6 +54,7 @@ return {
 	hide_tab_bar_if_only_one_tab = true,
 	window_frame = {
 		font_size = 14.0,
+		border_bottom_height = "0cell",
 	},
 	term = "xterm-256color",
 }
