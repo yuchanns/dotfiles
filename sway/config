@@ -50,7 +50,7 @@ output * {
 # resumed. It will also lock your screen before your computer goes to sleep.
 
 exec --no-startup-id fcitx5 -r -d
-exec mako
+exec mako --config ~/.config/mako/config
 exec /home/yuchanns/.config/sway/swaybg.sh
 exec flameshot
 exec prlcc
