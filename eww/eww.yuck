@@ -1,0 +1,100 @@
+;; define eww command for below usage
+(defvar eww "/usr/bin/eww -c ~/.config/eww")
+
+;; Widgets on Right
+(defwidget time []
+    (box :orientation "h"
+         :class "time"
+         :halign "end"
+        (button date)))
+(defpoll date :interval "1s" "env LANG=en.US date '+%b %d %Y %H:%M'")
+
+(defwidget power []
+    (eventbox :onhover "${eww} update power=true"
+              :onhoverlost "${eww} update power=false"
+            (box :orientation "h"
+                :space-evenly "false"
+                :hexpand "false"
+                :class "powermenu"
+                (revealer :transition "slideright"
+                          :reveal power
+                          :duration "550ms"
+                    (box :orientation "h"
+                         :space-evenly "false"
+                        (button :class "button-reboot"
+                                :tooltip "Reboot"
+                                :onclick "reboot" "")))
+                (button :class "button-off"
+                    :tooltip "Shutdown"
+                    :onclick "shutdown now" "⏻")
+            )
+    )
+)
+(defvar power false)
+
+(defwidget stats []
+    (box :orientation "h"
+         :space-evenly "false"
+         (time)
+         (power)))
+
+;; Right Widgets
+(defwidget right []
+    (box :orientation "h"
+         :space-evenly "false"
+         :halign "end"
+         :spacing 5
+         (stats))
+)
+
+;; Widgets on Left
+(deflisten workspaces :initial "[]" "sh ~/.config/eww/scripts/get-workspaces.sh")
+(deflisten current_workspace :initial "1" "sh ~/.config/eww/scripts/get-active-workspace.sh")
+
+(defwidget workspaces []
+    (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace {} ${current_workspace}"
+        (box :class "workspaces"
+            :space-evenly true
+            :orientation "h"
+            :valign "center"
+            :halign "start"
+            (for workspace in workspaces
+            (button :onclick "hyprctl dispatch workspace ${workspace.id}"
+                    :visible "${workspace.windows > 0 || workspace.id == current_workspace}"
+                    :class "${workspace.id == current_workspace ? "current" : ""} workspace-entry"
+                    "${workspace.id}")   
+            )
+        )
+    )
+)
+
+;; Left Widgets
+(defwidget left []
+    (box :orientation "h"
+         :space-evenly "false"
+         :halign "start"
+(workspaces)))
+
+;; Bar Widgets
+(defwidget bar []
+    (box :class "bar"
+        :orientation "h"
+        :vexpand "false"
+        :hexpand "false"
+(left)
+(right)))
+
+;; Bar Windows
+(defwindow bar
+    :monitor 0
+    :geometry (geometry :x "0"
+                        :y "0"
+                        :width "100%"
+                        :height "47px"
+                        :anchor "top center")
+    :stacking "fg"
+    ; :reserve (struts :distance "50px" :side "top")
+    :wm-ignore false
+    :hexpand "false"
+    :vexpand "false"
+(bar))

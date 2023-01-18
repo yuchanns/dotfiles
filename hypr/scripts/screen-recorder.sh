@@ -41,5 +41,14 @@ cp $TmpRecordPath $SavePath
 # copy the file location to your clipboard
 wl-copy $SavePath
 
+# Append .gif to the SavePath if it's missing
+#[[ $SavePath =~ \.gif$ ]] || SavePath+='.gif'
+
+# Produce a pallete from the video file
+#ffmpeg -i "$TmpRecordPath" -filter_complex "palettegen=stats_mode=full" "$TmpPalettePath" -y || exit
+
 # Return umask to default
 umask 022
+
+# Use pallete to produce a gif from the video file
+# ffmpeg -i "$TmpRecordPath" -i "$TmpPalettePath" -filter_complex "paletteuse=dither=sierra2_4a" "$SavePath" -y || exit

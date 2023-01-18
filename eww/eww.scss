@@ -1,0 +1,72 @@
+// Global
+*{
+  all: unset;
+}
+
+// Variable Color's
+$background: #1A1B26;
+$foreground: #A9B1D6;
+
+$black: #24283B;
+$gray: #565F89;
+$red: #F7768E;
+$green: #73DACA;
+$yellow: #E0AF68;
+$blue: #7AA2F7;
+$magenta: #BB9AF7;
+$cyan: #7DCFFF;
+$white: $foreground;
+
+// EWW BAR
+.bar{
+  background-color: $background;
+  padding: .3rem;
+  margin: 0 1rem;
+}
+
+.workspaces {
+    font-family: "SF Pro";
+    padding: .2rem .7rem .2rem .7rem;
+    background-color: $black;
+    border-radius: 10px;
+    color: $gray;
+}
+
+.workspace-entry {
+    margin: .35rem;
+    font-size: 1.25em;
+    color: $foreground;
+}
+
+.current {
+    color: $red;
+}
+
+.time {
+    font-family: Comic Mono;
+    font-weight: bold;
+    font-size: 1.2em;
+    background-color: $black;
+    color: $white;
+    border-radius: 5px;
+    padding: 0 .7rem 0 .5rem;
+    margin: 0 .5rem;
+}
+
+.powermenu {
+    font-family: SF Pro;
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.button-reboot, .button-off {
+    padding: .5rem .2rem .3rem .2rem;
+}
+.button-reboot {
+    color: $yellow;
+}
+.button-off {
+    color: $red;
+    margin-bottom: .5rem;
+    // margin-left: .5rem;
+}
