@@ -2,6 +2,35 @@
 (defvar eww "/usr/bin/eww -c ~/.config/eww")
 
 ;; Widgets on Right
+
+(defwidget battery []
+    (box :orientation "h"
+         :space-evenly "false"
+        (label :class "battery"
+               :valigh "end"
+               :text "${
+                    battery-status == "Charging" ? "" :
+                    (battery-capacity > 90 ? "" :
+                    (battery-capacity > 80 ? "" : 
+                    (battery-capacity > 70 ? "" :
+                    (battery-capacity > 60 ? "" :
+                    (battery-capacity > 50 ? "" :
+                    (battery-capacity > 40 ? "" :
+                    (battery-capacity > 30 ? "" :
+                    (battery-capacity > 20 ? "" :
+                    (battery-capacity > 10 ? "" :
+                    (battery-capacity > 0 ? "" : ""))))))))))}"
+               :tooltip "Battery: ${battery-capacity}%")))
+
+(defpoll battery-capacity :interval "1s" "cat /sys/class/power_supply/macsmc-battery/capacity")
+(defpoll battery-status :interval "1s" "cat /sys/class/power_supply/macsmc-battery/status")
+
+(defwidget control []
+    (box :orientation "h"
+         :space-evenly "false"
+         :class "control"
+         (battery)))
+
 (defwidget time []
     (box :orientation "h"
          :class "time"
@@ -44,6 +73,7 @@
          :space-evenly "false"
          :halign "end"
          :spacing 5
+         (control)
          (stats))
 )
 

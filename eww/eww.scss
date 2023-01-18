@@ -70,3 +70,19 @@ $white: $foreground;
     margin-bottom: .5rem;
     // margin-left: .5rem;
 }
+
+.control {
+    padding: .5rem;
+    font-family: Material Icons;
+    font-size: 1.6em;
+    background-color: $black;
+    border-radius: 5px;
+}
+
+.battery {
+    font-family: JetBrainsMono Nerd Font;
+    font-size: 1.2em;
+    padding-right: .5rem;
+    color: $blue;
+}
+
