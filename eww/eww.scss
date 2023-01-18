@@ -43,13 +43,13 @@ $white: $foreground;
 }
 
 .time {
-    font-family: Comic Mono;
+    font-family: SF Pro;
     font-weight: bold;
     font-size: 1.2em;
     background-color: $black;
     color: $white;
     border-radius: 5px;
-    padding: 0 .7rem 0 .5rem;
+    padding: 0 2rem;
     margin: 0 .5rem;
 }
 
@@ -64,11 +64,11 @@ $white: $foreground;
 }
 .button-reboot {
     color: $yellow;
+    font-size: 1.4em;
 }
 .button-off {
     color: $red;
-    margin-bottom: .5rem;
-    // margin-left: .5rem;
+    margin-left: .5rem;
 }
 
 .control {
@@ -82,7 +82,7 @@ $white: $foreground;
 .battery {
     font-family: JetBrainsMono Nerd Font;
     font-size: 1.2em;
-    padding-right: .5rem;
+    padding: 0 .5rem;
     color: $blue;
 }
 

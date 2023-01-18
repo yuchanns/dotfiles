@@ -52,7 +52,7 @@
                          :space-evenly "false"
                         (button :class "button-reboot"
                                 :tooltip "Reboot"
-                                :onclick "reboot" "")))
+                                :onclick "reboot" "")))
                 (button :class "button-off"
                     :tooltip "Shutdown"
                     :onclick "shutdown now" "⏻")
