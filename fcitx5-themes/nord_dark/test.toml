@@ -1,0 +1,17 @@
+ nord_dark:
+      name: 北方深色
+      horizontal: true              # true横排，false竖排
+      candidate_format: "%c %@ "    # 用 1/6 em 空格 U+2005 来控制编号 %c 和候选词 %@ 前后的空间
+      font_point: 14                           # 候选文字大小
+      label_font_point: 14                     # 候选编号大小
+      corner_radius: 5                         # 窗口圆角
+      line_spacing: 10                         # 行间距(适用于竖排)
+      back_color: #473A33                     # 候选条背景色
+      border_color: #473A33                   # 边框色
+      candidate_text_color: #F5D887           # 第一候选项文字颜色
+      comment_text_color: #E6B687             # 拼音等提示文字颜色
+      hilited_back_color: #473A33             # 第一候选项背景背景色
+      hilited_candidate_back_color: #5D4C43   # 候选文字背景色
+      hilited_candidate_text_color: #C0E077   # 第一候选项文字颜色
+      hilited_text_color: #6EC8F5             # 高亮拼音 (需要开启内嵌编码)
+      text_color: #78E8F0                     # 拼音等提示文字颜色
