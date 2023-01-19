@@ -8,18 +8,18 @@
          :space-evenly "false"
         (label :class "battery"
                :valigh "end"
-               :text "${
-                    battery-status == "Charging" ? "" :
-                    (battery-capacity > 90 ? "" :
-                    (battery-capacity > 80 ? "" : 
-                    (battery-capacity > 70 ? "" :
-                    (battery-capacity > 60 ? "" :
-                    (battery-capacity > 50 ? "" :
-                    (battery-capacity > 40 ? "" :
-                    (battery-capacity > 30 ? "" :
-                    (battery-capacity > 20 ? "" :
-                    (battery-capacity > 10 ? "" :
-                    (battery-capacity > 0 ? "" : ""))))))))))}"
+               :text "${battery-status == "Charging" ? "" : ""}${
+                    battery-capacity == 100 ? "" :
+                    (battery-capacity > 90 ? "" :
+                    (battery-capacity > 80 ? "" : 
+                    (battery-capacity > 70 ? "" :
+                    (battery-capacity > 60 ? "" :
+                    (battery-capacity > 50 ? "" :
+                    (battery-capacity > 40 ? "" :
+                    (battery-capacity > 30 ? "" :
+                    (battery-capacity > 20 ? "" :
+                    (battery-capacity > 10 ? "" :
+                    (battery-capacity > 0 ? "" : ""))))))))))}"
                :tooltip "Battery: ${battery-capacity}%")))
 
 (defpoll battery-capacity :interval "1s" "cat /sys/class/power_supply/macsmc-battery/capacity")
@@ -60,6 +60,8 @@
     )
 )
 (defvar power false)
+(defvar is-shutdown-open "false")
+(defvar is-reboot-open "false")
 
 (defwidget stats []
     (box :orientation "h"
