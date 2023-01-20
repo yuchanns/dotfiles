@@ -7,7 +7,7 @@
     (box :orientation "h"
          :space-evenly "false"
         (label :class "battery"
-               :valigh "end"
+               :valign "end"
                :text "${battery-status == "Charging" ? "" : ""}${
                     battery-capacity == 100 ? "" :
                     (battery-capacity > 90 ? "" :
@@ -36,7 +36,7 @@
          :class "time"
          :halign "end"
         (button date)))
-(defpoll date :interval "1s" "env LANG=en.US date '+%b %d %Y %H:%M'")
+(defpoll date :interval "1s" "env LANG=en.US date '+%a %d. %b  %H:%M'")
 
 (defwidget power []
     (eventbox :onhover "${eww} update power=true"
@@ -94,27 +94,36 @@
             (button :onclick "hyprctl dispatch workspace ${workspace.id}"
                     :visible "${workspace.windows > 0 || workspace.id == current_workspace}"
                     :class "${workspace.id == current_workspace ? "current" : ""} workspace-entry"
-                    "${workspace.id}")   
+                    "${workspace.id}")
             )
         )
     )
 )
+
+(defwidget logo []
+    (box :orientation "h"
+         :class "logo"
+         :space-evenly "false"
+         :halign "start"
+         ""))
 
 ;; Left Widgets
 (defwidget left []
     (box :orientation "h"
          :space-evenly "false"
          :halign "start"
+(logo)
 (workspaces)))
 
 ;; Bar Widgets
 (defwidget bar []
-    (box :class "bar"
-        :orientation "h"
-        :vexpand "false"
-        :hexpand "false"
-(left)
-(right)))
+    (box :class "plank"
+        (box :class "bar"
+                :orientation "h"
+                :vexpand "false"
+                :hexpand "false"
+        (left)
+        (right))))
 
 ;; Bar Windows
 (defwindow bar

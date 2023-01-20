@@ -18,23 +18,35 @@ $cyan: #7DCFFF;
 $white: $foreground;
 
 // EWW BAR
+.plank {
+  background-color: $blue;
+}
+
 .bar{
-  background-color: $background;
-  padding: .3rem;
-  margin: 0 1rem;
+  border-radius: 15;
+  background-color: rgba(26, 27, 38, 0.8);
+  padding: 0 1rem;
+  margin: .5rem 1.4rem;
+}
+
+.logo {
+    color: $green;
+    font-size: 2.5em;
+    padding: 0 1.5rem 0 .2rem;
 }
 
 .workspaces {
     font-family: "SF Pro";
-    padding: .2rem .7rem .2rem .7rem;
+    padding: .2rem .7rem;
     background-color: $black;
     border-radius: 10px;
     color: $gray;
 }
 
 .workspace-entry {
-    margin: .35rem;
+    margin: .35rem 1rem;
     font-size: 1.25em;
+    font-weight: bold;
     color: $foreground;
 }
 
@@ -43,14 +55,14 @@ $white: $foreground;
 }
 
 .time {
-    font-family: SF Pro;
+    font-family: "SF Pro";
     font-weight: bold;
     font-size: 1.2em;
-    background-color: $black;
-    color: $white;
-    border-radius: 5px;
-    padding: 0 2rem;
-    margin: 0 .5rem;
+    background-color: $white;
+    color: $black;
+    border-radius: 15px;
+    padding: .2rem 1rem;
+    margin: .5rem;
 }
 
 .powermenu {
@@ -72,17 +84,16 @@ $white: $foreground;
 }
 
 .control {
-    padding: .5rem;
     font-family: Material Icons;
     font-size: 1.6em;
-    background-color: $black;
-    border-radius: 5px;
+    border-radius: 15px;
+    margin: .35rem 0;
 }
 
 .battery {
     font-family: JetBrainsMono Nerd Font;
     font-size: 1.2em;
-    padding: 0 2rem 0 .5rem;
+    padding: .1rem 2rem .1rem .5rem;
     color: $blue;
 }
 
