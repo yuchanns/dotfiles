@@ -1,6 +1,25 @@
 ;; define eww command for below usage
 (defvar eww "/usr/bin/eww -c ~/.config/eww")
 
+;; calendar Widget
+(defwidget cal []
+    (box :class "calendar-box"
+         :orientation "h"
+        (box :class "calendar-inner-box"
+            (calendar :class "calendar"
+                :day calendar-day
+                :month calendar-month
+                :year calendar-year)
+        )
+    )
+)
+(defpoll calendar-day :interval "1h"
+    "date '+%d'")
+(defpoll calendar-month :interval "1h"
+    "date '+%m'")
+(defpoll calendar-year :interval "1h"
+    "date '+%Y'")
+
 ;; Widgets on Right
 
 (defpoll volume :interval "1s" "volumectl | awk -F ' ' '{print substr($2, 0, length($2)-1)}'")
@@ -87,11 +106,15 @@
          (battery)
 ))
 
+(defvar calendar "false")
 (defwidget time []
     (box :orientation "h"
          :class "time"
          :halign "end"
-        (button date)))
+        (button :onclick "${calendar ?
+                "${eww} update calendar=false && ${eww} close calendar" :
+                "${eww} update calendar=true && ${eww} open calendar"}"
+                date)))
 (defpoll date :interval "1s" "env LANG=en.US date '+%a %d. %b  %H:%M'")
 
 (defwidget power []
@@ -173,20 +196,19 @@
 
 ;; Bar Widgets
 (defwidget bar []
-    (box :class "plank"
-        (box :class "bar"
-                :orientation "h"
-                :vexpand "false"
-                :hexpand "false"
-        (left)
-        (right))))
+    (box :class "bar"
+            :orientation "h"
+            :vexpand "false"
+            :hexpand "false"
+    (left)
+    (right)))
 
 ;; Bar Windows
 (defwindow bar
     :monitor 0
     :geometry (geometry :x "0"
-                        :y "0"
-                        :width "100%"
+                        :y "6"
+                        :width "97.5%"
                         :height "47px"
                         :anchor "top center")
     :stacking "fg"
@@ -195,3 +217,12 @@
     :hexpand "false"
     :vexpand "false"
 (bar))
+
+;; calendar Windows
+(defwindow calendar
+    :monitor 0
+    :geometry (geometry :x "80%"
+                        :y "70px"
+                        :width "60px"
+                        :height "270px")
+(cal))

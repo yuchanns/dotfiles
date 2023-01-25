@@ -18,15 +18,10 @@ $cyan: #7DCFFF;
 $white: $foreground;
 
 // EWW BAR
-.plank {
-  background-color: $blue;
-}
-
 .bar{
   border-radius: 15;
-  background-color: rgba(26, 27, 38, 0.8);
+  background-color: rgba(26, 27, 38, 0.5);
   padding: 0 1rem;
-  margin: .5rem 1.4rem;
 }
 
 .logo {
@@ -124,4 +119,48 @@ scale trough {
 .volbar trough highlight {
     background-color: $green;
     border-radius: 5px;
+}
+
+.calendar-box {
+  background-color: rgba(26, 27, 38, 0.8);
+  font-family: SF Pro;
+  font-size: 1em;
+  font-weight: bold;
+  border-radius: 15px;
+  border: 2px solid $white;
+
+  .calendar-inner-box {
+      padding: 1rem 1rem .2rem;
+
+      .calendar {
+          &.highlight {
+              padding: 10rem;
+          }
+
+          padding: .8rem .25rem 0rem;
+          margin-left: 10px;
+      }
+  }
+}
+
+calendar:selected {
+    color: $red;
+}
+
+calendar.header {
+    color: $blue;
+    font-weight: bold;
+}
+
+calendar.button {
+    color: $magenta;
+}
+
+calendar.highlight {
+    color: $magenta;
+    font-weight: bold;
+}
+
+calendar:indeterminate {
+    color: $gray;
 }

@@ -4,6 +4,8 @@
 FILE="$HOME/.cache/eww_launch.xyz"
 EWW="/usr/bin/eww -c $HOME/.config/eww"
 
+export LANG=en.US
+
 ## Run eww daemon if not running already
 if [[ ! `pidof eww` ]]; then
 	${EWW} daemon
