@@ -93,7 +93,35 @@ $white: $foreground;
 .battery {
     font-family: JetBrainsMono Nerd Font;
     font-size: 1.2em;
-    padding: .1rem 2rem .1rem .5rem;
+    margin: 0 1rem .2rem .5rem;
     color: $blue;
 }
 
+.brightness-icon{
+    margin: 0 .2rem;
+    color: $yellow;
+}
+
+scale trough {
+    all: unset;
+    background-color: $background;
+    border-radius: 5px;
+    min-height: 10px;
+    min-width: 80px;
+    margin: 0 .3rem;
+}
+.brightbar trough highlight {
+    background-color: $yellow;
+    border-radius: 5px;
+}
+
+.volume-icon{
+    margin: 0 .4rem;
+    font-size: 1.4em;
+    color: $green;
+}
+
+.volbar trough highlight {
+    background-color: $green;
+    border-radius: 5px;
+}

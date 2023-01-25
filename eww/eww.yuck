@@ -3,6 +3,59 @@
 
 ;; Widgets on Right
 
+(defpoll volume :interval "1s" "volumectl | awk -F ' ' '{print substr($2, 0, length($2)-1)}'")
+(defpoll volume-status :interval "1s" "volumectl | awk -F ' ' '{print substr($3, 2, length($3)-2)}'")
+(defvar volum "false")
+(defwidget volum []
+    (eventbox :onhover "${eww} update volum=true"
+              :onhoverlost "${eww} update volum=false"
+            (box :orientation "h"
+                 :space-evenly "false"
+                 :spacing "2"
+                 (revealer :transition "slideright"
+                           :reveal volum
+                           :duration "550ms"
+                            (scale :class "volbar"
+                                :value volume
+                                :tooltip "Volume: ${volume} %"
+                                :onchange "volumectl set {}%"
+                                :orientation "h"
+                                :max 100
+                                :min 0
+                            )
+                )
+                (label :class "volume-icon" :text "${volume-status == "on" ? "墳" : "ﱝ"}")
+            )
+    )
+)
+
+(defpoll brightness :interval "5s" "light | awk -F, '{print substr($0, 0, length($0)-3)}'")
+(defvar bright "false")
+(defwidget bright []
+    (eventbox
+        :onhover "${eww} update bright=true"
+        :onhoverlost "${eww} update bright=false"
+        (box :space-evenly "false"
+             :orientation "h"
+             :hexpand "false"
+             :spacing 2
+            (revealer :transition "slideright"
+                      :reveal bright
+                      :duration "550ms"
+                        (scale :class "brightbar"
+                             :value brightness
+                             :tooltip "Brightness: ${brightness} %"
+                             :onchange "light -S {}"
+                             :orientation "h"
+                             :max 100
+                             :min 0
+                        )
+            )
+            (label :class "brightness-icon" :text "")
+        )
+    )
+)
+
 (defwidget battery []
     (box :orientation "h"
          :space-evenly "false"
@@ -29,7 +82,10 @@
     (box :orientation "h"
          :space-evenly "false"
          :class "control"
-         (battery)))
+         (volum)
+         (bright)
+         (battery)
+))
 
 (defwidget time []
     (box :orientation "h"
