@@ -14,6 +14,7 @@ fi
 
 ## Open widgets 
 run_eww() {
+	touch "$FILE"
 	${EWW} open-many \
          bar
         
@@ -21,9 +22,9 @@ run_eww() {
 
 ## Launch or close widgets accordingly
 if [[ ! -f "$FILE" ]]; then
-	touch "$FILE"
 	run_eww 
 else
 	${EWW} close-all && killall eww
 	rm "$FILE"
+    run_eww
 fi

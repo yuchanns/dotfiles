@@ -129,9 +129,15 @@
                           :duration "550ms"
                     (box :orientation "h"
                          :space-evenly "false"
+                        (button :class "button-lock"
+                                :tooltip "Lock"
+                                :onclick "${lock}"
+                                "")
                         (button :class "button-reboot"
                                 :tooltip "Reboot"
-                                :onclick "reboot" "")))
+                                :onclick "reboot" "")
+                    )
+                )
                 (button :class "button-off"
                     :tooltip "Shutdown"
                     :onclick "shutdown now" "⏻")
@@ -139,8 +145,7 @@
     )
 )
 (defvar power false)
-(defvar is-shutdown-open "false")
-(defvar is-reboot-open "false")
+(defvar lock "swaylock --indicator-idle-visible --indicator-radius 100 --indicator-thickness 7 --ignore-empty-password --ring-color 53E2AE --ring-ver-color 53E2AE --ring-wrong-color EE4F84 --key-hl-color EE4F84 --text-color ffffff --text-ver-color ffffff --text-wrong-color EE4F84 --line-color 00000000 --inside-color 00000088 --inside-ver-color 00000088 --inside-wrong-color 00000088 --separator-color 00000000 & systemctl suspend")
 
 (defwidget stats []
     (box :orientation "h"

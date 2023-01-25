@@ -66,7 +66,7 @@ $white: $foreground;
     font-weight: bold;
 }
 
-.button-reboot, .button-off {
+.button-reboot, .button-off, .button-lock {
     padding: .5rem .2rem .3rem .2rem;
 }
 .button-reboot {
@@ -76,6 +76,12 @@ $white: $foreground;
 .button-off {
     color: $red;
     margin-left: .5rem;
+}
+
+.button-lock {
+    color: $magenta;
+    font-size: 1.3em;
+    margin-right: .5rem;
 }
 
 .control {
