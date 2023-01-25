@@ -61,7 +61,7 @@
          :space-evenly "false"
         (label :class "battery"
                :valign "end"
-               :text "${battery-status == "Charging" ? "" :
+               :text "${battery-status == "Charging" ? "" :
                     battery-capacity == 100 ? "" :
                     (battery-capacity > 90 ? "" :
                     (battery-capacity > 80 ? "" : 
