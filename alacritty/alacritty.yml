@@ -14,7 +14,7 @@
 # Any items in the `env` entry below will be added as
 # environment variables. Some entries may override variables
 # set by alacritty itself.
-#env:
+# env:
   # TERM variable
   #
   # This value is used to set the `$TERM` environment variable for
@@ -22,6 +22,7 @@
   # check the local terminfo database and use `alacritty` if it is
   # available, otherwise `xterm-256color` is used.
   #TERM: alacritty
+  # WINIT_X11_SCALE_FACTOR: "1"
 
 window:
   # Window dimensions (changes require restart)
@@ -30,17 +31,17 @@ window:
   # must be non-zero for this to take effect. The number of columns must be at
   # least `2`, while using a value of `0` for columns and lines will fall back
   # to the window manager's recommended size
-  #dimensions:
-  #  columns: 0
-  #  lines: 0
+  # dimensions:
+  #   columns: 0
+  #   lines: 0
 
   # Window position (changes require restart)
   #
   # Specified in number of pixels.
   # If the position is not set, the window manager will handle the placement.
-  #position:
-  #  x: 0
-  #  y: 0
+  # position:
+   # x: 0
+   # y: 0
 
   # Window padding (changes require restart)
   #
@@ -158,14 +159,14 @@ font:
     #style: Bold Italic
 
   # Point size
-  #size: 11.0
+  # size: 11.0
 
   # Offset is the extra space around each character. `offset.y` can be thought
   # of as modifying the line spacing, and `offset.x` as modifying the letter
   # spacing.
-  #offset:
+  # offset:
   #  x: 0
-  #  y: 0
+  #  y: -10
 
   # Glyph offset determines the locations of the glyphs within their cells with
   # the default being at the bottom. Increasing `x` moves the glyph to the
