@@ -1,6 +1,3 @@
-;; define eww command for below usage
-(defvar eww "/usr/bin/eww -c ~/.config/eww")
-
 ;; Calendar Widget
 (defwidget cal []
     (box :class "calendar-box"
@@ -48,8 +45,8 @@
 (defpoll volume-status :interval "1s" "volumectl | awk -F ' ' '{print substr($3, 2, length($3)-2)}'")
 (defvar volum "false")
 (defwidget volum []
-    (eventbox :onhover "${eww} update volum=true"
-              :onhoverlost "${eww} update volum=false"
+    (eventbox :onhover "${EWW_CMD} update volum=true"
+              :onhoverlost "${EWW_CMD} update volum=false"
             (box :orientation "h"
                  :space-evenly "false"
                  :spacing "2"
@@ -74,8 +71,8 @@
 (defvar bright "false")
 (defwidget bright []
     (eventbox
-        :onhover "${eww} update bright=true"
-        :onhoverlost "${eww} update bright=false"
+        :onhover "${EWW_CMD} update bright=true"
+        :onhoverlost "${EWW_CMD} update bright=false"
         (box :space-evenly "false"
              :orientation "h"
              :hexpand "false"
@@ -102,22 +99,22 @@
          :space-evenly "false"
         (label :class "battery"
                :valign "end"
-               :text "${battery-status == "Charging" ? "" :
-                    battery-capacity == 100 ? "" :
-                    (battery-capacity > 90 ? "" :
-                    (battery-capacity > 80 ? "" : 
-                    (battery-capacity > 70 ? "" :
-                    (battery-capacity > 60 ? "" :
-                    (battery-capacity > 50 ? "" :
-                    (battery-capacity > 40 ? "" :
-                    (battery-capacity > 30 ? "" :
-                    (battery-capacity > 20 ? "" :
-                    (battery-capacity > 10 ? "" :
-                    (battery-capacity > 0 ? "" : ""))))))))))}"
-               :tooltip "Battery: ${battery-capacity}%")))
+               :text "${EWW_BATTERY['macsmc-battery']['status'] == "Charging" ? "" :
+                    EWW_BATTERY['macsmc-battery']['capacity'] == 100 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 90 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 80 ? "" : 
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 70 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 60 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 50 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 40 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 30 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 20 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 10 ? "" :
+                    (EWW_BATTERY['macsmc-battery']['capacity'] > 0 ? "" : ""))))))))))}"
+               :tooltip "Battery: ${EWW_BATTERY['macsmc-battery']['capacity']}%")))
 
-(defpoll battery-capacity :interval "1s" "cat /sys/class/power_supply/macsmc-battery/capacity")
-(defpoll battery-status :interval "1s" "cat /sys/class/power_supply/macsmc-battery/status")
+; (defpoll battery-capacity :interval "1s" "cat /sys/class/power_supply/macsmc-battery/capacity")
+; (defpoll battery-status :interval "1s" "cat /sys/class/power_supply/macsmc-battery/status")
 
 (defwidget control []
     (box :orientation "h"
@@ -134,14 +131,14 @@
          :class "time"
          :halign "end"
         (button :onclick "${calendar ?
-                "${eww} update calendar=false && ${eww} close calendar" :
-                "${eww} update calendar=true && ${eww} open calendar"}"
+                "${EWW_CMD} update calendar=false && ${EWW_CMD} close calendar" :
+                "${EWW_CMD} update calendar=true && ${EWW_CMD} open calendar"}"
                 date)))
 (defpoll date :interval "1s" "env LANG=en.US date '+%a %d. %b  %H:%M'")
 
 (defwidget power []
-    (eventbox :onhover "${eww} update power=true"
-              :onhoverlost "${eww} update power=false"
+    (eventbox :onhover "${EWW_CMD} update power=true"
+              :onhoverlost "${EWW_CMD} update power=false"
             (box :orientation "h"
                 :space-evenly "false"
                 :hexpand "false"
