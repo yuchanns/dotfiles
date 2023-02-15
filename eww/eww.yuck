@@ -1,7 +1,7 @@
 ;; define eww command for below usage
 (defvar eww "/usr/bin/eww -c ~/.config/eww")
 
-;; calendar Widget
+;; Calendar Widget
 (defwidget cal []
     (box :class "calendar-box"
          :orientation "h"
@@ -19,6 +19,28 @@
     "date '+%m'")
 (defpoll calendar-year :interval "1h"
     "date '+%Y'")
+
+;; Widgets on Center
+(defpoll weather :interval "1m" "curl wttr.in/?format=+%c+%t")
+(defwidget weather []
+    (eventbox
+        (box :orientation "h"
+            :space-evenly "true"
+            :valign "center"
+            :class "weather"
+            "${weather}"
+        )
+    )
+)
+
+;; Center Widgets
+(defwidget center []
+   (box :orientation "h"
+        :space-evenly "false"
+        :halign "center"
+        (weather)
+    )
+)
 
 ;; Widgets on Right
 
@@ -206,6 +228,7 @@
             :vexpand "false"
             :hexpand "false"
     (left)
+    (center)
     (right)))
 
 ;; Bar Windows
@@ -223,7 +246,7 @@
     :vexpand "false"
 (bar))
 
-;; calendar Windows
+;; Calendar Windows
 (defwindow calendar
     :monitor 0
     :geometry (geometry :x "80%"
@@ -231,3 +254,4 @@
                         :width "60px"
                         :height "270px")
 (cal))
+

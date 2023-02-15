@@ -171,3 +171,15 @@ calendar.highlight {
 calendar:indeterminate {
     color: $gray;
 }
+
+.weather {
+    font-family: "SF Pro";
+    font-weight: bold;
+    color: $blue;
+    font-size: 1.2em;
+    padding: .5rem 1rem;
+    background-color: rgba(86, 95, 137, 0.3);
+    border-radius: 15px;
+    border: 2px solid $black;
+}
+
