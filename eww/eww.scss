@@ -183,3 +183,18 @@ calendar:indeterminate {
     border: 2px solid $black;
 }
 
+.cpu-graph {
+    font-family: "SF Pro";
+    font-weight: bold;
+    color: $red;
+    font-size: 1.2em;
+    padding: .5rem;
+    margin: .5rem 0 .5rem 1rem;
+    background-color: rgba(86, 95, 137, 0.3);
+    border: 2px solid $black;
+}
+
+.cpu-graph-inner {
+    background-color: $blue;
+}
+

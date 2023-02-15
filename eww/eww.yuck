@@ -41,6 +41,25 @@
 
 ;; Widgets on Right
 
+(defwidget cpu-graph []
+    (box :class "cpu-graph"
+        :orientation "v"
+        :space-evenly "true"
+        (graph :class "cpu-graph-inner"
+                :height 5
+                :width 40
+                :value "${EWW_CPU['avg']}"
+                :max 20
+                :min 0
+                :tooltip "${round(EWW_CPU['avg'], 2)}%"
+                :dynamic "true"
+                :thickness "2"
+                :line-style "miter"
+                :time-range "10s"
+        )
+    )
+)
+
 (defpoll volume :interval "1s" "volumectl | awk -F ' ' '{print substr($2, 0, length($2)-1)}'")
 (defpoll volume-status :interval "1s" "volumectl | awk -F ' ' '{print substr($3, 2, length($3)-2)}'")
 (defvar volum "false")
@@ -123,6 +142,7 @@
          (volum)
          (bright)
          (battery)
+         (cpu-graph)
 ))
 
 (defvar calendar "false")
@@ -170,7 +190,9 @@
     (box :orientation "h"
          :space-evenly "false"
          (time)
-         (power)))
+         (power)
+    )
+)
 
 ;; Right Widgets
 (defwidget right []
