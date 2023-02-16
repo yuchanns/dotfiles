@@ -1,27 +1,23 @@
 ;; Calendar Widget
+(defpoll date :interval "1s" `env LANG=en.US date '+{"year":"%Y","week":"%a","day":"%d","month":"%b","hour":"%H","min":"%M"}'`)
+
 (defwidget cal []
     (box :class "calendar-box"
          :orientation "h"
         (box :class "calendar-inner-box"
             (calendar :class "calendar"
-                :day calendar-day
-                :month calendar-month
-                :year calendar-year)
+                :day "${date.day}"
+                :month "${date.month}"
+                :year "${date.year}"
+            )
         )
     )
 )
-(defpoll calendar-day :interval "1h"
-    "date '+%d'")
-(defpoll calendar-month :interval "1h"
-    "date '+%m'")
-(defpoll calendar-year :interval "1h"
-    "date '+%Y'")
 
 ;; Widgets on Center
 
 (deflisten music-cover "sh ~/.config/eww/scripts/get-music-cover.sh ~/.config/eww/cache_directory")
-(defpoll music-title :interval "5s" "playerctl metadata --format '{{ xesam:title }}'")
-(defpoll music-status :interval "5s" "playerctl status")
+(defpoll music :interval "5s" `playerctl metadata --format '{"title":"{{ markup_escape(xesam:title) }}","status":"{{ status }}"}'`)
 (defwidget music []
     (eventbox
         (box :space-evenly "false"
@@ -35,9 +31,9 @@
             (label
                 :class "music-title"
                 :wrap "true"
-                :tooltip "${music-status}: ${music-title}"
+                :tooltip "${music.status}: ${music.title}"
                 :limit-width 15
-                :text music-title)
+                :text "${music.title}")
         )
     )
 )
@@ -66,15 +62,15 @@
 
 ;; Widgets on Right
 
-(defwidget cpu-graph []
+(defwidget cpu-graph [avg]
     (box :class "cpu-graph"
         :orientation "v"
         :space-evenly "true"
-        :tooltip "${round(EWW_CPU['avg'], 2)}%"
+        :tooltip "${round(avg, 2)}%"
         (graph :class "cpu-graph-inner"
                 :height 5
                 :width 40
-                :value "${EWW_CPU['avg']}"
+                :value avg
                 :max 20
                 :min 0
                 :dynamic "true"
@@ -138,24 +134,24 @@
     )
 )
 
-(defwidget battery []
+(defwidget battery [capacity status]
     (box :orientation "h"
          :space-evenly "false"
         (label :class "battery"
                :valign "end"
-               :text "${EWW_BATTERY['macsmc-battery']['status'] == "Charging" ? "" :
-                    EWW_BATTERY['macsmc-battery']['capacity'] == 100 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 90 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 80 ? "" : 
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 70 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 60 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 50 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 40 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 30 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 20 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 10 ? "" :
-                    (EWW_BATTERY['macsmc-battery']['capacity'] > 0 ? "" : ""))))))))))}"
-               :tooltip "Battery: ${EWW_BATTERY['macsmc-battery']['capacity']}%")))
+               :text "${status == "Charging" ? "" :
+                    capacity == 100 ? "" :
+                    (capacity > 90 ? "" :
+                    (capacity > 80 ? "" : 
+                    (capacity > 70 ? "" :
+                    (capacity > 60 ? "" :
+                    (capacity > 50 ? "" :
+                    (capacity > 40 ? "" :
+                    (capacity > 30 ? "" :
+                    (capacity > 20 ? "" :
+                    (capacity > 10 ? "" :
+                    (capacity > 0 ? "" : ""))))))))))}"
+               :tooltip "Battery: ${capacity}%")))
 
 ; (defpoll battery-capacity :interval "1s" "cat /sys/class/power_supply/macsmc-battery/capacity")
 ; (defpoll battery-status :interval "1s" "cat /sys/class/power_supply/macsmc-battery/status")
@@ -166,8 +162,9 @@
          :class "control"
          (volum)
          (bright)
-         (battery)
-         (cpu-graph)
+         (battery :capacity {EWW_BATTERY['macsmc-battery']['capacity']}
+                    :status {EWW_BATTERY['macsmc-battery']['status']})
+         (cpu-graph :avg {EWW_CPU['avg']})
 ))
 
 (defvar calendar "false")
@@ -178,8 +175,7 @@
         (button :onclick "${calendar ?
                 "${EWW_CMD} update calendar=false && ${EWW_CMD} close calendar" :
                 "${EWW_CMD} update calendar=true && ${EWW_CMD} open calendar"}"
-                date)))
-(defpoll date :interval "1s" "env LANG=en.US date '+%a %d. %b  %H:%M'")
+                "${date.week} ${date.day}. ${date.month} ${date.hour}:${date.min}")))
 
 (defwidget power []
     (eventbox :onhover "${EWW_CMD} update power=true"
