@@ -198,3 +198,31 @@ calendar:indeterminate {
     background-color: $blue;
 }
 
+tooltip.background {
+    font-family: "SF Pro";
+    font-weight: bold;
+    background-color: $background;
+    font-size: 1.2em;
+    border-radius: 5px;
+    color: $white;
+}
+
+tooltip label {
+    margin: 6px;
+}
+
+.music-cover {
+    background-size: cover;	
+	background-position: center;
+	min-height: 24px;
+	min-width: 24px;
+	margin: 10px;
+	border-radius: 100px;
+}
+
+.music-title {
+    color: #a1bdce;
+	font-size : 18px;
+	font-weight : bold;
+	margin : 3px 5px 0px 0px;
+}

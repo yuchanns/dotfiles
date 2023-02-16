@@ -18,7 +18,31 @@
     "date '+%Y'")
 
 ;; Widgets on Center
-(defpoll weather :interval "1m" "curl wttr.in/?format=+%c+%t")
+
+(deflisten music-cover "sh ~/.config/eww/scripts/get-music-cover.sh ~/.config/eww/cache_directory")
+(defpoll music-title :interval "5s" "playerctl metadata --format '{{ xesam:title }}'")
+(defpoll music-status :interval "5s" "playerctl status")
+(defwidget music []
+    (eventbox
+        (box :space-evenly "false"
+            :vexpand "false"
+            :hexpand "false"
+            (box :vexpand "false"
+                :hexpand "false"
+                :class "music-cover"
+                :style "background-image:url('${music-cover}');"
+            )
+            (label
+                :class "music-title"
+                :wrap "true"
+                :tooltip "${music-status}: ${music-title}"
+                :limit-width 15
+                :text music-title)
+        )
+    )
+)
+
+(defpoll weather :interval "1m" "curl wttr.in/shenzhen?format=+%c+%t")
 (defwidget weather []
     (eventbox
         (box :orientation "h"
@@ -36,6 +60,7 @@
         :space-evenly "false"
         :halign "center"
         (weather)
+        (music)
     )
 )
 
@@ -45,13 +70,13 @@
     (box :class "cpu-graph"
         :orientation "v"
         :space-evenly "true"
+        :tooltip "${round(EWW_CPU['avg'], 2)}%"
         (graph :class "cpu-graph-inner"
                 :height 5
                 :width 40
                 :value "${EWW_CPU['avg']}"
                 :max 20
                 :min 0
-                :tooltip "${round(EWW_CPU['avg'], 2)}%"
                 :dynamic "true"
                 :thickness "2"
                 :line-style "miter"
@@ -73,7 +98,7 @@
                            :reveal volum
                            :duration "550ms"
                             (scale :class "volbar"
-                                :value volume
+                                :value "${volume}.0"
                                 :tooltip "Volume: ${volume} %"
                                 :onchange "volumectl set {}%"
                                 :orientation "h"
@@ -100,7 +125,7 @@
                       :reveal bright
                       :duration "550ms"
                         (scale :class "brightbar"
-                             :value brightness
+                             :value "${brightness}.0"
                              :tooltip "Brightness: ${brightness} %"
                              :onchange "light -S {}"
                              :orientation "h"
@@ -256,10 +281,9 @@
     :geometry (geometry :x "0"
                         :y "6"
                         :width "97.6%"
-                        :height "47px"
+                        :height "47"
                         :anchor "top center")
     :stacking "fg"
-    ; :reserve (struts :distance "50px" :side "top")
     :wm-ignore false
     :hexpand "false"
     :vexpand "false"
@@ -269,8 +293,8 @@
 (defwindow calendar
     :monitor 0
     :geometry (geometry :x "80%"
-                        :y "70px"
-                        :width "60px"
-                        :height "270px")
+                        :y "70"
+                        :width "60"
+                        :height "270")
 (cal))
 
