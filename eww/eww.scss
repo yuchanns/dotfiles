@@ -192,6 +192,7 @@ calendar:indeterminate {
     margin: .5rem 0 .5rem 1rem;
     background-color: rgba(86, 95, 137, 0.3);
     border: 2px solid $black;
+    border-radius: 5px;
 }
 
 .cpu-graph-inner {
@@ -204,6 +205,7 @@ tooltip.background {
     background-color: $background;
     font-size: 1.2em;
     border-radius: 5px;
+    border: 2px solid $white;
     color: $white;
 }
 
@@ -217,12 +219,12 @@ tooltip label {
 	min-height: 24px;
 	min-width: 24px;
 	margin: 10px;
-	border-radius: 100px;
+	border-radius: 10%;
 }
 
 .music-title {
     color: #a1bdce;
-	font-size : 18px;
+	font-size : 1.2em;
 	font-weight : bold;
 	margin : 3px 5px 0px 0px;
 }
