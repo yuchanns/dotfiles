@@ -71,7 +71,7 @@ $white: $foreground;
 }
 .button-reboot {
     color: $yellow;
-    // font-size: 1.4em;
+    font-size: 1.4em;
     margin-right: .5rem;
 }
 .button-off {
@@ -186,9 +186,9 @@ calendar:indeterminate {
 .cpu-graph {
     font-family: "SF Pro";
     font-weight: bold;
-    color: $red;
+    color: $blue;
     font-size: 1.2em;
-    padding: .5rem;
+    padding: .2rem;
     margin: .5rem 0 .5rem 1rem;
     background-color: rgba(86, 95, 137, 0.3);
     border: 2px solid $black;
@@ -196,7 +196,7 @@ calendar:indeterminate {
 }
 
 .cpu-graph-inner {
-    background-color: $blue;
+    background-color: $red;
 }
 
 tooltip.background {
