@@ -17,7 +17,7 @@
 ;; Widgets on Center
 
 (deflisten music-cover "sh ~/.config/eww/scripts/get-music-cover.sh ~/.config/eww/cache_directory")
-(defpoll music :interval "5s" `playerctl metadata --format '{"title":"{{ markup_escape(xesam:title) }}","status":"{{ status }}"}'`)
+(defpoll music :interval "5s" `playerctl metadata --format '{"title":"{{ markup_escape(xesam:title) }}","status":"{{ status }}","album":"{{ album }}","artist":"{{artist}}"}'`)
 (defwidget music []
     (eventbox
         (box :space-evenly "false"
@@ -31,21 +31,28 @@
             (label
                 :class "music-title"
                 :wrap "true"
-                :tooltip "${music.status}: ${music.title}"
+                :tooltip "${music.status}: ${music.title}
+Album: ${music.album}
+Artist: ${music.artist}"
                 :limit-width 15
                 :text "${music.title}")
         )
     )
 )
 
-(defpoll weather :interval "1m" "curl wttr.in/shenzhen?format=+%c+%t")
+(defpoll weather :interval "10m" `curl -m 10 wttr.in/shenzhen?format='\\{"cond":"%c","temp":"%t","loc":"%l","wind":"%w","pressure":"%P","precip":"%p","temp_like":"%f"\\}'`)
 (defwidget weather []
     (eventbox
         (box :orientation "h"
             :space-evenly "true"
             :valign "center"
             :class "weather"
-            "${weather}"
+            :tooltip "Location: ${weather.loc}
+Temperature (Feels Like): ${weather.temp_like}
+Wind: ${weather.wind}
+Pressure: ${weather.pressure}
+Precipitation: ${weather.precip}"
+            "${weather.cond}${weather.temp}"
         )
     )
 )
@@ -69,7 +76,7 @@
         :tooltip "${round(avg, 2)}%"
         (graph :class "cpu-graph-inner"
                 :height 5
-                :width 40
+                :width 45
                 :value avg
                 :max 20
                 :min 0
