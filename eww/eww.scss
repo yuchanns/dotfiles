@@ -26,8 +26,8 @@ $white: $foreground;
 
 .logo {
     color: $green;
-    font-size: 2.0em;
-    padding: 0 1.5rem 0 .2rem;
+    font-size: 2.5em;
+    padding: 0 .8rem 0 .2rem;
 }
 
 .workspaces {
@@ -72,7 +72,7 @@ $white: $foreground;
 .button-reboot {
     color: $yellow;
     font-size: 1.4em;
-    margin-right: .5rem;
+    // margin-right: .5rem;
 }
 .button-off {
     color: $red;
