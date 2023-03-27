@@ -244,12 +244,23 @@ Precipitation: ${weather.precip}"
             :valign "center"
             :halign "start"
             (for workspace in workspaces
-            (button :onclick "hyprctl dispatch workspace ${workspace.id}"
+                (button :onclick "hyprctl dispatch workspace ${workspace.id}"
                     :visible "${workspace.windows > 0 || workspace.id == current_workspace}"
                     :class "${workspace.id == current_workspace ? "current" : ""} workspace-entry"
                     "${workspace.id}")
             )
         )
+    )
+)
+
+(defpoll active-window :interval "5s" "hyprctl activewindow -j")
+(defwidget activewindow []
+    (box :class "activewindow"
+        :orientation "h"
+        :space-evenly false
+        :visible "${active-window.class != "null"}"
+        (box :class "activewindow-arrow" "")
+        (box "${active-window.class}")
     )
 )
 
@@ -266,7 +277,8 @@ Precipitation: ${weather.precip}"
          :space-evenly "false"
          :halign "start"
 (logo)
-(workspaces)))
+(workspaces)
+(activewindow)))
 
 ;; Bar Widgets
 (defwidget bar []
