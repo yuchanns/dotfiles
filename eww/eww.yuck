@@ -235,6 +235,7 @@ Precipitation: ${weather.precip}"
 ;; Widgets on Left
 (deflisten workspaces :initial "[]" "sh ~/.config/eww/scripts/get-workspaces.sh")
 (deflisten current_workspace :initial "1" "sh ~/.config/eww/scripts/get-active-workspace.sh")
+(deflisten current_window :initial "" "sh ~/.config/eww/scripts/get-active-window.sh")
 
 (defwidget workspaces []
     (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace {} ${current_workspace}"
@@ -253,14 +254,13 @@ Precipitation: ${weather.precip}"
     )
 )
 
-(defpoll active-window :interval "5s" "hyprctl activewindow -j")
 (defwidget activewindow []
     (box :class "activewindow"
         :orientation "h"
         :space-evenly false
-        :visible "${active-window.class != "null"}"
+        :visible "${current_window != ""}"
         (box :class "activewindow-arrow" "")
-        (box "${active-window.class}")
+        (box "${current_window}")
     )
 )
 

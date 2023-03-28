@@ -233,10 +233,11 @@ tooltip label {
     font-family: "SF Pro";
     font-weight: bold;
     font-size: 1.2em;
-    color: #a1bdce;
+    color: $white;
 }
 
 .activewindow-arrow {
     margin: 0 1rem;
     font-size: 2rem;
+    color: $magenta;
 }
