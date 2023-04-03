@@ -95,7 +95,7 @@ $white: $foreground;
 .battery {
     font-family: JetBrainsMono Nerd Font;
     font-size: 1.2em;
-    margin: 0 1rem .2rem .5rem;
+    margin: 0 0 .3rem .5rem;
     color: $blue;
 }
 
@@ -241,3 +241,54 @@ tooltip label {
     font-size: 2rem;
     color: $magenta;
 }
+
+.gh-notifications {
+    margin: 0 .2rem;
+    font-size: .9em;
+    color: $magenta;
+}
+
+.gh-list {
+    border: $magenta solid 2px;
+    border-radius: 10;
+    background-color: $background;
+    font-family: "SF Pro";
+    font-size: 1.2em;
+    color: $white;
+}
+.gh-item {
+    border-bottom: $blue solid 2px;
+    margin: .5rem .5rem;
+    font-weight: bold;
+}
+.gh-issue {
+    border-color: $green;
+}
+.gh-discuss {
+    border-color: $white;
+}
+.gh-pr {
+    border-color: $yellow;
+}
+.gh-commit {
+    border-color: $white
+}
+.gh-icon {
+    margin: .4rem;
+    font-size: 1em;
+    color: $blue;
+}
+
+.gh-icon-issue {
+    color: $green;
+}
+.gh-icon-discuss {
+    color: $white;
+}
+.gh-icon-pr {
+    color: $yellow;
+}
+.gh-icon-commit {
+    color: $white;
+}
+

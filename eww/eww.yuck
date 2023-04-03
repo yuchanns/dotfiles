@@ -69,6 +69,52 @@ Precipitation: ${weather.precip}"
 
 ;; Widgets on Right
 
+(defvar gh-show "false")
+(defpoll gh-notifications :interval "1m" "gh api notifications")
+(defwidget gh-notifications [len]
+    (box :orientation "h"
+        :space-evenly "false"
+        (button :onclick "${gh-show ? "${EWW_CMD} update gh-show=false && ${EWW_CMD} close ghn":"${EWW_CMD} update gh-show=true && ${EWW_CMD} open ghn"}"
+         (label :class "gh-notifications"
+            :text "${len > 0 ? "􀝗" : "􀋚"}")
+         )
+    )
+)
+(defwidget gh-list []
+    (box :class "gh-list"
+        :orientation "v"
+        :space-evenly "false"
+        (for notification in gh-notifications
+            (gh-item :type "${notification.subject.type}"
+                    :title "${notification.subject.title}"
+                    :url "${notification.subject.url}")
+        )
+     )
+)
+(defwidget gh-item [type title url]
+    (box :halign "start"
+        :space-evenly "false"
+        :class "gh-item ${type == "Issue" ? "gh-issue" :
+            (type == "Discussion") ? "gh-discuss":
+            (type == "PullRequest") ? "gh-pr":
+            (type == "Commit") ? "gh-commit" : ""}"
+            (box :class "gh-icon ${type == "Issue" ? "gh-icon-issue" :
+                (type == "Discussion") ? "gh-icon-discuss":
+                (type == "PullRequest") ? "gh-icon-pr":
+                (type == "Commit") ? "gh-icon-commit" : ""}"
+                "${type == "Issue" ? "􀍷" :
+                (type == "Discussion") ? "􀒤":
+                (type == "PullRequest") ? "":
+                (type == "Commit") ? "􀡚" :
+                (type == "Release") ? "" : "􀂓"}")
+            (button :onclick "gh api ${url} | jq .html_url | xargs xdg-open &"
+                (label
+                    :limit-width 30
+                    :text title)
+            )
+    )
+)
+
 (defwidget cpu-graph [avg]
     (box :class "cpu-graph"
         :orientation "v"
@@ -146,18 +192,12 @@ Precipitation: ${weather.precip}"
          :space-evenly "false"
         (label :class "battery"
                :valign "end"
-               :text "${status == "Charging" ? "" :
-                    capacity == 100 ? "" :
-                    (capacity > 90 ? "" :
-                    (capacity > 80 ? "" : 
-                    (capacity > 70 ? "" :
-                    (capacity > 60 ? "" :
-                    (capacity > 50 ? "" :
-                    (capacity > 40 ? "" :
-                    (capacity > 30 ? "" :
-                    (capacity > 20 ? "" :
-                    (capacity > 10 ? "" :
-                    (capacity > 0 ? "" : ""))))))))))}"
+               :text "${status == "Charging" ? "􀢋" :
+                    capacity == 100 ? "􀛨" :
+                    (capacity > 75 ? "􀺸" :
+                    (capacity > 50 ? "􀺶" :
+                    (capacity > 25 ? "􀛩" :
+                    (capacity > 0 ? "􀛪" : "􀛪"))))}"
                :tooltip "Battery: ${capacity}%")))
 
 ; (defpoll battery-capacity :interval "1s" "cat /sys/class/power_supply/macsmc-battery/capacity")
@@ -167,6 +207,7 @@ Precipitation: ${weather.precip}"
     (box :orientation "h"
          :space-evenly "false"
          :class "control"
+         (gh-notifications :len {arraylength(gh-notifications)})
          (volum)
          (bright)
          (battery :capacity {EWW_BATTERY['macsmc-battery']['capacity']}
@@ -260,7 +301,7 @@ Precipitation: ${weather.precip}"
         :space-evenly false
         :visible "${current_window != ""}"
         (box :class "activewindow-arrow" "")
-        (box "${current_window}")
+        (label :text "${current_window}")
     )
 )
 
@@ -313,3 +354,11 @@ Precipitation: ${weather.precip}"
                         :height "270")
 (cal))
 
+;; Github Notifications Window
+(defwindow ghn
+    :monitor 0
+    :geometry (geometry :x "72%"
+                        :y "70"
+                        :width "150")
+    (gh-list)
+)
