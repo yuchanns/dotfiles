@@ -207,9 +207,9 @@ Precipitation: ${weather.precip}"
     (box :orientation "h"
          :space-evenly "false"
          :class "control"
-         (gh-notifications :len {arraylength(gh-notifications)})
          (volum)
          (bright)
+         (gh-notifications :len {arraylength(gh-notifications)})
          (battery :capacity {EWW_BATTERY['macsmc-battery']['capacity']}
                     :status {EWW_BATTERY['macsmc-battery']['status']})
          (cpu-graph :avg {EWW_CPU['avg']})
