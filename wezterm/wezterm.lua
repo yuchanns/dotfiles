@@ -25,16 +25,10 @@ end)
 
 return {
 	default_cwd = "/home/yuchanns/Coding",
-	font_rules = {
-		{
-			italic = true,
-			font = wezterm.font("Operator Mono Medium", { italic = true }),
-		},
-	},
-	font = wezterm.font_with_fallback({ "JetBrains Mono", "Sarasa Mono SC Nerd" }),
+	default_prog = { "/bin/bash" },
+	font = wezterm.font_with_fallback({ "JetBrains Mono Nerd Font", "Sarasa Mono SC Nerd" }),
 	font_size = 12.0,
 
-	use_ime = true,
 	xim_im_name = "fcitx5",
 	enable_wayland = true,
 
