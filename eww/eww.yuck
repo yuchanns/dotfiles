@@ -155,7 +155,7 @@ Precipitation: ${weather.precip}"
                                 :min 0
                             )
                 )
-                (label :class "volume-icon" :text "${volume-status == "on" ? "墳" : "ﱝ"}")
+                (label :class "volume-icon" :text "${volume-status == "on" ? "墳" : ""}")
             )
     )
 )
@@ -253,7 +253,7 @@ Precipitation: ${weather.precip}"
     )
 )
 (defvar power false)
-(defvar lock "swaylock --indicator-idle-visible --indicator-radius 100 --indicator-thickness 7 --ignore-empty-password --ring-color 53E2AE --ring-ver-color 53E2AE --ring-wrong-color EE4F84 --key-hl-color EE4F84 --text-color ffffff --text-ver-color ffffff --text-wrong-color EE4F84 --line-color 00000000 --inside-color 00000088 --inside-ver-color 00000088 --inside-wrong-color 00000088 --separator-color 00000000 -i ~/.config/hypr/wallpapers/background_01.jpeg & hyprctl dispatch dpms off")
+(defvar lock "systemctl suspend")
 
 (defwidget stats []
     (box :orientation "h"
@@ -301,7 +301,7 @@ Precipitation: ${weather.precip}"
         :space-evenly false
         :visible "${current_window != ""}"
         (box :class "activewindow-arrow" "")
-        (label :text "${current_window}")
+        (label :text "${current_window}" :limit-width 15)
     )
 )
 
