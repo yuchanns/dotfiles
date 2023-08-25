@@ -1,0 +1,31 @@
+[user]
+  email = me@yuchanns.xyz
+  name = yuchanns
+  signingkey = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFFT2O6OfIzvSgJL9R7JKgbDtzAVAufKSPJzuOoUzDq/
+[gpg]
+  format = ssh
+[gpg "ssh"]
+  program = "/opt/1Password/op-ssh-sign"
+[commit]
+  gpgsign = true
+  template = /home/yuchanns/.gitmessage.txt
+[i18n]
+  commitEncoding = utf-8
+  logOutputEncoding = utf-8
+[core]
+    quotepath = false
+    editor = vim
+[diff]
+    tool = vimdiff
+[difftool]
+    tool = vimdiff
+[merge]
+    tool = vimdiff
+[filter "lfs"]
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+[pull]
+    rebase = false
+
