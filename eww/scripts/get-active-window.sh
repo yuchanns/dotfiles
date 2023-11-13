@@ -1,6 +1,6 @@
 #!/bin/bash
 
-declare -A dict=(["wezterm"]="wezterm" ["chromium"]="chrome")
+declare -A dict=(["wezterm"]="wezterm" ["chromium"]="chrome" ["dolphin"]="dolphin")
 
 rename_window () {
   local field=$1 # get the field passed as argument

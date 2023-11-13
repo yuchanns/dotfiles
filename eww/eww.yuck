@@ -15,11 +15,55 @@
 )
 
 ;; Widgets on Center
+(defvar mc-show "false")
+(defwidget mcardalbum []
+    (box :vexpand "false"
+        :hexpand "false"
+        :style "background-image:linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 40%), url('${music-cover}'); 
+        background-repeat: no-repeat;
+        background-size: 100% 150%, contain; 
+        background-position: 33.33% 0, 0 0;
+        border-radius: 15px"
+        (box :space-evenly "false"
+            :orientation "v"
+            :halign "end"
+            :valign "center"
+            :style "font-family: SF Pro Display; margin-right: 30px"
+            (label
+                :xalign "1"
+                :wrap "true"
+                :limit-width 15
+                :style "font-weight: bold; font-size: 1.4em"
+                :text "${music.title}")
+            (label
+                :xalign "1"
+                :wrap "true"
+                :limit-width 15
+                :style 'font-size: 1em'
+                :text "${music.artist}")
+            (box :space-evenly "false"
+                :orientation "h"
+                :style "margin-top: 8px"
+                :style "font-size: 3.5em"
+                (button :style "margin: 10px"
+                    :onclick "playerctl previous"
+                    "󰒮")
+                (button :style "margin: 10px"
+                    :onclick "playerctl play-pause"
+                    "${music.status == "Paused" ? "󰐊" : "󰏤"}")
+                (button :style "margin: 10px"
+                    :onclick "playerctl next"
+                    "󰒭")
+            )
+        )
+    )
+)
 
 (deflisten music-cover "sh ~/.config/eww/scripts/get-music-cover.sh ~/.config/eww/cache_directory")
-(defpoll music :interval "5s" `playerctl metadata --format '{"title":"{{ markup_escape(xesam:title) }}","status":"{{ status }}","album":"{{ album }}","artist":"{{artist}}"}'`)
+(defpoll music :interval "2s" `playerctl metadata --format '{"title":"{{ markup_escape(xesam:title) }}","status":"{{ status }}","album":"{{ album }}","artist":"{{artist}}"}'`)
 (defwidget music []
     (eventbox
+        :onclick "${mc-show ? "${EWW_CMD} update mc-show=false && ${EWW_CMD} close mcard":"${EWW_CMD} update mc-show=true && ${EWW_CMD} open mcard"}"
         (box :space-evenly "false"
             :vexpand "false"
             :hexpand "false"
@@ -31,9 +75,6 @@
             (label
                 :class "music-title"
                 :wrap "true"
-                :tooltip "${music.status}: ${music.title}
-Album: ${music.album}
-Artist: ${music.artist}"
                 :limit-width 15
                 :text "${music.title}")
         )
@@ -336,7 +377,7 @@ Precipitation: ${weather.precip}"
     :monitor 0
     :geometry (geometry :x "0"
                         :y "6"
-                        :width "97.6%"
+                        :width "97%"
                         :height "47"
                         :anchor "top center")
     :stacking "fg"
@@ -362,3 +403,14 @@ Precipitation: ${weather.precip}"
                         :width "150")
     (gh-list)
 )
+
+;; Music Card
+(defwindow mcard
+    :monitor 0
+    :geometry (geometry :x "50%"
+                        :y "70"
+                        :width "400"
+                        :height "200")
+    (mcardalbum)
+)
+
