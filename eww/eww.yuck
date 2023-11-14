@@ -19,7 +19,7 @@
 (defwidget mcardalbum []
     (box :vexpand "false"
         :hexpand "false"
-        :style "background-image:linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 1) 40%), url('${music-cover}'); 
+        :style "background-image:linear-gradient(to right, rgba(36, 40, 59, 0), rgba(36, 40, 59, 1) 46%), url('${music-cover}'); 
         background-repeat: no-repeat;
         background-size: 100% 150%, contain; 
         background-position: 33.33% 0, 0 0;
@@ -407,9 +407,9 @@ Precipitation: ${weather.precip}"
 ;; Music Card
 (defwindow mcard
     :monitor 0
-    :geometry (geometry :x "50%"
-                        :y "70"
-                        :width "400"
+    :geometry (geometry :x "40%"
+                        :y "60"
+                        :width "430"
                         :height "200")
     (mcardalbum)
 )
