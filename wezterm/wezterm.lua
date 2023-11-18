@@ -26,10 +26,10 @@ end)
 return {
 	default_cwd = "/home/yuchanns/Coding",
 	default_prog = { "/bin/bash" },
-	font = wezterm.font_with_fallback({ "JetBrains Mono Nerd Font", "Sarasa Mono SC Nerd" }),
+	font = wezterm.font_with_fallback({ "Berkeley Mono Nerd Font", "Sarasa Mono SC Nerd" }),
 	font_size = 12.0,
 
-	xim_im_name = "fcitx5",
+	-- xim_im_name = "fcitx5",
 	enable_wayland = true,
 
 	window_background_opacity = 0.9,
@@ -51,4 +51,5 @@ return {
 		border_bottom_height = "0cell",
 	},
 	term = "xterm-256color",
+	dpi = 192.0,
 }
