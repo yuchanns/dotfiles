@@ -1,0 +1,8 @@
+[manager]
+show_hidden = true
+
+[opener]
+edit = [
+	{ exec = 'nvim "$@"', block = true,  for = "linux" },
+]
+
