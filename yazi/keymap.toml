@@ -2,6 +2,7 @@
 
 keymap = [
     { on = [ "<C-o>" ], exec = '''shell nvim --block --confirm''', desc = "Open nvim here" },
+    { on = [ "<C-l>" ], exec = '''shell lazygit --block --confirm''', desc = "Open nvim here" },
 	{ on = [ "<Esc>" ], exec = "escape",             desc = "Exit visual mode, clear selected, or cancel search" },
 	{ on = [ "q" ],     exec = "quit",               desc = "Exit the process" },
 	{ on = [ "Q" ],     exec = "quit --no-cwd-file", desc = "Exit the process without writing cwd-file" },
