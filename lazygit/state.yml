@@ -1,0 +1,14 @@
+lastupdatecheck: 0
+recentrepos:
+- /home/yuchanns/Coding/github/dotfiles
+- /home/yuchanns/.config/nvim
+- /home/yuchanns/Coding/git.myscrm.cn/analytic-cloud/video-analysis
+- /home/yuchanns/Coding/git.myscrm.cn/analytic-cloud/video-analysis-proto
+- /home/yuchanns/Coding/git.myscrm.cn/analytic-cloud/ad-serving-cron
+- /home/yuchanns/Coding/git.myscrm.cn/analytic-cloud/ad-serving-queue
+- /home/yuchanns/Coding/git.myscrm.cn/analytic-cloud/adplatform-sdk
+- /home/yuchanns/Coding/git.myscrm.cn/analytic-cloud/video-analysis-py
+startuppopupversion: 5
+customcommandshistory:
+- "0"
+hidecommandlog: true
