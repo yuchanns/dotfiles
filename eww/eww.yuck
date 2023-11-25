@@ -223,7 +223,7 @@ Precipitation: ${weather.precip}"
                              :min 0
                         )
             )
-            (label :class "brightness-icon" :text "")
+            (label :class "brightness-icon" :text "󰃠")
         )
     )
 )
@@ -351,7 +351,7 @@ Precipitation: ${weather.precip}"
          :class "logo"
          :space-evenly "false"
          :halign "start"
-         ""))
+         ""))
 
 ;; Left Widgets
 (defwidget left []

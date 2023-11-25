@@ -27,7 +27,7 @@ $white: $foreground;
 .logo {
     color: $green;
     font-size: 1.5em;
-    padding: 0 1rem 0 .2rem;
+    padding: 0 1.4rem 0 .2rem;
 }
 
 .workspaces {
@@ -100,8 +100,9 @@ $white: $foreground;
 }
 
 .brightness-icon{
-    margin: 0 .2rem;
+    margin: 0 .6rem 0 .1rem;
     color: $yellow;
+    font-size: 0.9em;
 }
 
 scale trough {
@@ -244,7 +245,7 @@ tooltip label {
 
 .gh-notifications {
     margin: 0 .2rem 0 0.4rem;
-    font-size: .9em;
+    font-size: .75em;
     color: $magenta;
 }
 
