@@ -1,0 +1,43 @@
+import = [
+    # "~/.config/alacritty/themes/tokyonight.toml"
+    "~/.config/alacritty/themes/tokyonight-storm.toml"
+]
+
+working_directory = "Coding"
+
+[env]
+TERM = "xterm-256color"
+
+[font]
+builtin_box_drawing = true
+size = 11.0
+
+[font.normal]
+family = "Berkeley Mono Nerd Font"
+
+[[keyboard.bindings]]
+action = "Paste"
+key = "V"
+mods = "Command"
+
+[[keyboard.bindings]]
+action = "Copy"
+key = "C"
+mods = "Command"
+
+[window]
+dynamic_title = true
+opacity = 0.9
+decorations = "None"
+blur = true
+
+[window.padding]
+x = 0
+y = 0
+
+[colors.selection]
+text = "#c0caf5"
+background = "#364A82"
+
+[mouse]
+hide_when_typing = true
