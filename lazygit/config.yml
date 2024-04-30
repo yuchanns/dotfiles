@@ -24,4 +24,4 @@ gui:
 git: 
     paging:
         colorArg: always
-        pager: delta --dark --paging=never --syntax-theme "Visual Studio Dark+" -s
+        pager: delta --dark --paging=never --syntax-theme "Catppuccin Mocha" -s

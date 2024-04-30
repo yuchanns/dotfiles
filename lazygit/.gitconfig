@@ -1,0 +1,56 @@
+[user]
+  email = me@yuchanns.xyz
+  name = yuchanns
+  signingkey = F53299298EEB09F2
+[gpg]
+  ; format = ssh
+  program = gpg2
+; [gpg "ssh"]
+;   program = "/opt/1Password/op-ssh-sign"
+[commit]
+  gpgsign = true
+  template = /home/yuchanns/.gitmessage.txt
+[i18n]
+  commitEncoding = utf-8
+  logOutputEncoding = utf-8
+[core]
+    quotepath = false
+    editor = nvim
+    pager = delta
+[diff]
+    tool = nvimdiff
+    algorithm = histogram
+[difftool]
+    tool = nvimdiff
+[merge]
+    tool = nvimdiff
+    conflictstyle = zdiff3
+[filter "lfs"]
+    smudge = git-lfs smudge -- %f
+    process = git-lfs filter-process
+    required = true
+    clean = git-lfs clean -- %f
+[pull]
+    rebase = true
+[rebase]
+    autosquash = true
+[push]
+    default = current
+[init]
+    defaultBranch = main
+
+[rerere]
+    enable = true
+
+[help]
+    autocorrect = 10
+
+[include]
+    path = ~/.catppuccin.gitconfig
+
+[delta]
+    features = catppuccin-mocha
+
+[include]
+    path = ~/.private.gitconfig
+
