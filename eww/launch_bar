@@ -16,7 +16,8 @@ fi
 run_eww() {
 	touch "$FILE"
 	${EWW} open-many \
-         bar
+         bar \
+         builtin
         
 }
 

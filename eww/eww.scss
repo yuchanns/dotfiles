@@ -26,7 +26,7 @@ $white: $foreground;
 
 .logo {
     color: $blue;
-    font-size: 1.5em;
+    font-size: 2.0em;
     padding: 0 1.4rem 0 .2rem;
 }
 
@@ -100,9 +100,9 @@ $white: $foreground;
 }
 
 .brightness-icon{
-    margin: 0 .6rem 0 .1rem;
+    margin: 0 .1rem 0 .1rem;
     color: $yellow;
-    font-size: 0.9em;
+    font-size: 1.1em;
 }
 
 scale trough {
@@ -119,8 +119,8 @@ scale trough {
 }
 
 .volume-icon{
-    margin: 0 .4rem;
-    font-size: 1.4em;
+    margin: 0 .4rem 0 0.2rem;
+    font-size: 1.0em;
     color: $green;
 }
 
@@ -291,5 +291,25 @@ tooltip label {
 }
 .gh-icon-commit {
     color: $white;
+}
+
+.tray {
+    margin: 0 0.6rem;
+    .background.csd.popup {
+        background-color: rgba(26, 27, 38, 0.85);
+        font-family: SF Pro;
+        border-radius: 5px;
+        border: 2px solid $background;
+        color: $white;
+        menu {
+            font-size: .8em;
+            padding: .8rem;
+        }
+    }
+    widget{
+        image {
+            color: $blue;
+        }
+    }
 }
 

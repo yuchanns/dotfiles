@@ -196,7 +196,7 @@ Precipitation: ${weather.precip}"
                                 :min 0
                             )
                 )
-                (label :class "volume-icon" :text "${volume-status == "on" ? "墳" : ""}")
+                (label :class "volume-icon" :text "${volume-status == "on" ? "墳" : "󰝟"}")
             )
     )
 )
@@ -241,13 +241,19 @@ Precipitation: ${weather.precip}"
                     (capacity > 0 ? "􀛪" : "􀛪"))))}"
                :tooltip "Battery: ${capacity}%")))
 
-; (defpoll battery-capacity :interval "1s" "cat /sys/class/power_supply/macsmc-battery/capacity")
-; (defpoll battery-status :interval "1s" "cat /sys/class/power_supply/macsmc-battery/status")
+(defwidget tray []
+    (systray :class "tray"
+             :pack-direction "ttb"
+             :spacing 4
+             :space-evenly false
+             :icon-size 20
+             :prepend-new true))
 
 (defwidget control []
     (box :orientation "h"
          :space-evenly "false"
          :class "control"
+         (tray)
          (volum)
          (bright)
          (gh-notifications :len {arraylength(gh-notifications)})
@@ -293,6 +299,7 @@ Precipitation: ${weather.precip}"
             )
     )
 )
+
 (defvar power false)
 (defvar lock "systemctl suspend")
 
@@ -319,7 +326,7 @@ Precipitation: ${weather.precip}"
 (deflisten current_workspace :initial "1" "sh ~/.config/eww/scripts/get-active-workspace.sh")
 (deflisten current_window :initial "" "sh ~/.config/eww/scripts/get-active-window.sh")
 
-(defwidget workspaces []
+(defwidget workspaces [monitor-id]
     (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace {} ${current_workspace}"
         (box :class "workspaces"
             :space-evenly true
@@ -328,7 +335,7 @@ Precipitation: ${weather.precip}"
             :halign "start"
             (for workspace in workspaces
                 (button :onclick "hyprctl dispatch workspace ${workspace.id}"
-                    :visible "${workspace.windows > 0 || workspace.id == current_workspace}"
+                    :visible "${(workspace.windows > 0 || workspace.id == current_workspace) && monitor-id == workspace.monitorID}"
                     :class "${workspace.id == current_workspace ? "current" : ""} workspace-entry"
                     "${workspace.id}")
             )
@@ -354,26 +361,39 @@ Precipitation: ${weather.precip}"
          ""))
 
 ;; Left Widgets
-(defwidget left []
+(defwidget left [monitor-id]
     (box :orientation "h"
          :space-evenly "false"
          :halign "start"
 (logo)
-(workspaces)
+(workspaces :monitor-id monitor-id)
 (activewindow)))
 
 ;; Bar Widgets
-(defwidget bar []
+(defwidget bar [monitor-id]
     (box :class "bar"
             :orientation "h"
             :vexpand "false"
             :hexpand "false"
-    (left)
+    (left :monitor-id monitor-id)
     (center)
     (right)))
 
 ;; Bar Windows
 (defwindow bar
+    :monitor 1
+    :geometry (geometry :x "0"
+                        :y "6"
+                        :width "97.6%"
+                        :height "47"
+                        :anchor "top center")
+    :stacking "fg"
+    :wm-ignore false
+    :hexpand "false"
+    :vexpand "false"
+(bar :monitor-id 1))
+
+(defwindow builtin
     :monitor 0
     :geometry (geometry :x "0"
                         :y "6"
@@ -384,7 +404,7 @@ Precipitation: ${weather.precip}"
     :wm-ignore false
     :hexpand "false"
     :vexpand "false"
-(bar))
+(bar :monitor-id 0))
 
 ;; Calendar Windows
 (defwindow calendar
