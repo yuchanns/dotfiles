@@ -27,13 +27,13 @@ return {
 	default_cwd = "/home/yuchanns/Coding",
 	default_prog = { "/bin/bash" },
 	font = wezterm.font_with_fallback({ "Berkeley Mono Nerd Font", "Sarasa Mono SC Nerd" }),
-	font_size = 12.0,
+	font_size = 11.0,
 
 	-- xim_im_name = "fcitx5",
 	enable_wayland = true,
 
 	window_background_opacity = 0.9,
-	color_scheme = "tokyonight",
+	color_scheme = "tokyonight_moon",
 	window_padding = {
 		left = 5,
 		right = 0,
@@ -51,5 +51,5 @@ return {
 		border_bottom_height = "0cell",
 	},
 	term = "xterm-256color",
-	dpi = 192.0,
+	-- dpi = 192.0,
 }
