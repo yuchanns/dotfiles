@@ -23,10 +23,32 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
 	return tab.actvie_pane.id .. tab.active_pane.title
 end)
 
+local default_prog
+local font
+local default_cwd
+
+if wezterm.target_triple == 'x86_64-pc-windows-msvc' then
+  default_prog = "powershell.exe"
+  font = { "Cascadia Mono" }
+  default_cwd = wezterm.home_dir .. "\\Coding"
+else
+  default_prog = "/bin/bash"
+  font = { "Berkeley Mono Nerd Font", "Sarasa Mono SC Nerd" }
+  default_cwd = wezterm.home_dir .. "/Coding"
+end
+
+local wsl_domains = wezterm.default_wsl_domains()
+
+for _, dom in ipairs(wsl_domains) do
+  if dom.name == 'WSL:Ubuntu-24.04' then
+    dom.default_prog = { 'bash' }
+  end
+end
+
 return {
-	default_cwd = "/home/yuchanns/Coding",
-	default_prog = { "/bin/bash" },
-	font = wezterm.font_with_fallback({ "Berkeley Mono Nerd Font", "Sarasa Mono SC Nerd" }),
+	default_cwd = default_cwd,
+	default_prog = { default_prog },
+	font = wezterm.font_with_fallback(font),
 	font_size = 11.0,
 
 	-- xim_im_name = "fcitx5",
@@ -52,4 +74,5 @@ return {
 	},
 	term = "xterm-256color",
 	-- dpi = 192.0,
+  wsl_domains = wsl_domains,
 }
