@@ -103,8 +103,11 @@ Precipitation: ${weather.precip}"
    (box :orientation "h"
         :space-evenly "false"
         :halign "center"
-        (weather)
-        (music)
+        :hexpand "false"
+        :vexpand "false"
+        :class "center"
+        (weather :vexpand "false")
+        (music :vexpand "false")
     )
 )
 
@@ -372,9 +375,9 @@ Precipitation: ${weather.precip}"
 ;; Bar Widgets
 (defwidget bar [monitor-id]
     (box :class "bar"
+            :space-evenly "false"
             :orientation "h"
-            :vexpand "false"
-            :hexpand "false"
+            :halign "center"
     (left :monitor-id monitor-id)
     (center)
     (right)))
