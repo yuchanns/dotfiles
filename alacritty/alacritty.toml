@@ -1,3 +1,4 @@
+[general]
 import = [
     # "~/.config/alacritty/themes/tokyonight.toml"
     "~/.config/alacritty/themes/tokyonight-storm.toml"
