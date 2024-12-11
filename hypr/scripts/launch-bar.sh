@@ -1,8 +1,9 @@
 #!/bin/sh
 
-swww init
-sleep 4
+swww kill
+swww-daemon &
 # swww img ~/.config/hypr/wallpapers/background_01.jpeg 
 # swww img ~/.config/hypr/wallpapers/background_02.jpg 
-swww img ~/.config/hypr/wallpapers/background_03.jpg 
+swww img ~/.config/hypr/wallpapers/asahidake.jpg --outputs eDP-1 
+swww img ~/.config/hypr/wallpapers/hakodate.jpg --outputs HDMI-A-1 
 ~/.config/eww/launch_bar
