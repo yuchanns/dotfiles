@@ -325,12 +325,12 @@ Precipitation: ${weather.precip}"
 )
 
 ;; Widgets on Left
-(deflisten workspaces :initial "[]" "sh ~/.config/eww/scripts/get-workspaces.sh")
-(deflisten current_workspace :initial "1" "sh ~/.config/eww/scripts/get-active-workspace.sh")
-(deflisten current_window :initial "" "sh ~/.config/eww/scripts/get-active-window.sh")
+(defvar active_window "") ;; rely on hypringo update
+(defvar active_workspace "") ;; rely on hypringo update
+(defvar workspaces "[]") ;; rely on hypringo update
 
 (defwidget workspaces [monitor-id]
-    (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace {} ${current_workspace}"
+    (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace {} ${active_workspace}"
         (box :class "workspaces"
             :space-evenly true
             :orientation "h"
@@ -338,8 +338,8 @@ Precipitation: ${weather.precip}"
             :halign "start"
             (for workspace in workspaces
                 (button :onclick "hyprctl dispatch workspace ${workspace.id}"
-                    :visible "${(workspace.windows > 0 || workspace.id == current_workspace) && monitor-id == workspace.monitorID}"
-                    :class "${workspace.id == current_workspace ? "current" : ""} workspace-entry"
+                    :visible "${(workspace.windows > 0 || workspace.id == active_workspace) && monitor-id == workspace.monitorID}"
+                    :class "${workspace.id == active_workspace ? "current" : ""} workspace-entry"
                     "${workspace.id}")
             )
         )
@@ -350,9 +350,9 @@ Precipitation: ${weather.precip}"
     (box :class "activewindow"
         :orientation "h"
         :space-evenly false
-        :visible "${current_window != ""}"
+        :visible "${active_window != ""}"
         (box :class "activewindow-arrow" "")
-        (label :text "${current_window}" :limit-width 15)
+        (label :text "${active_window}" :limit-width 15)
     )
 )
 
