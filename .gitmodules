@@ -1,3 +1,6 @@
 [submodule "nvim"]
 	path = nvim
 	url = https://github.com/yuchanns/nvim
+[submodule "Hypringo"]
+	path = Hypringo
+	url = https://github.com/yuchanns/Hypringo
