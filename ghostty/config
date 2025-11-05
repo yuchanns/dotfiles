@@ -20,3 +20,6 @@ app-notifications = no-clipboard-copy
 quit-after-last-window-closed = false
 
 background-opacity = 0.9
+
+custom-shader-animation = always
+custom-shader = shaders/cursor.glsl
