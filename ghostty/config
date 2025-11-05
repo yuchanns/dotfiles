@@ -1,0 +1,22 @@
+theme = "TokyoNight Storm"
+font-size = 11
+font-family = "BerkeleyMono Nerd Font"
+font-family = "Sarasa Mono SC Nerd"
+font-feature = "+liga"
+cursor-style = "block"
+cursor-style-blink = false
+shell-integration-features = "no-cursor,title"
+mouse-hide-while-typing = true
+bell-features = "no-audio"
+window-padding-y = 0
+window-padding-x = 0
+window-padding-balance = true
+window-padding-color = "extend"
+
+keybind = cmd+c=copy_to_clipboard
+keybind = cmd+v=paste_from_clipboard
+
+app-notifications = no-clipboard-copy
+quit-after-last-window-closed = false
+
+background-opacity = 0.9

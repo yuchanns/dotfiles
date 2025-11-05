@@ -1,0 +1,3 @@
+```bash
+cp ./ghostty ~/.config/
+```
