@@ -385,6 +385,7 @@ Precipitation: ${weather.precip}"
 ;; Bar Windows
 (defwindow bar
     :monitor 1
+    :exclusive true
     :geometry (geometry :x "0"
                         :y "6"
                         :width "97.6%"
@@ -398,6 +399,7 @@ Precipitation: ${weather.precip}"
 
 (defwindow builtin
     :monitor 0
+    :exclusive true
     :geometry (geometry :x "0"
                         :y "6"
                         :width "97.6%"
