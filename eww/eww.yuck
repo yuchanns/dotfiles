@@ -239,7 +239,7 @@ Status: ${hypringo.github.stale ? "stale" : (hypringo.github.available ? "ready"
         :space-evenly "true"
         :tooltip "${round(avg, 2)}%"
         (graph :class "cpu-graph-inner"
-                :height 5
+                :height 19
                 :width 45
                 :value avg
                 :max 100
