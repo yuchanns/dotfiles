@@ -21,6 +21,7 @@ $white: $foreground;
 .bar{
   border-radius: 15;
   background-color: rgba(26, 27, 38, 0.5);
+  min-height: 40px;
   padding: 0 1rem;
 }
 
@@ -98,15 +99,15 @@ $white: $foreground;
 
 .battery {
     font-family: JetBrainsMono Nerd Font;
-    font-size: 1.2em;
-    margin: 0 0 .3rem .5rem;
+    font-size: 1em;
+    margin: 0 0 0 .5rem;
     color: $blue;
 }
 
 .brightness-icon{
-    margin: 0 .1rem 0 .1rem;
+    margin: 0 .5rem 0 .1rem;
     color: $yellow;
-    font-size: 1.1em;
+    font-size: .85em;
 }
 
 scale trough {
@@ -223,7 +224,7 @@ tooltip label {
 	background-position: center;
 	min-height: 24px;
 	min-width: 24px;
-	margin: 10px;
+	margin: 4px 10px;
 	border-radius: 10%;
 }
 
@@ -316,4 +317,3 @@ tooltip label {
         }
     }
 }
-

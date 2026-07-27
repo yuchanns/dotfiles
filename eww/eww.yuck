@@ -1,5 +1,7 @@
+(include "./hypringo.yuck")
+
 ;; Calendar Widget
-(defpoll date :interval "1s" `env LANG=en.US date '+{"year":"%Y","week":"%a","day":"%d","month":"%b","hour":"%H","min":"%M"}'`)
+(defpoll date :interval "1m" `env LANG=en.US date '+{"year":"%Y","week":"%a","day":"%d","month":"%b","hour":"%H","min":"%M"}'`)
 
 (defwidget cal []
     (box :class "calendar-box"
@@ -34,66 +36,67 @@
                 :wrap "true"
                 :limit-width 15
                 :style "font-weight: bold; font-size: 1.4em"
-                :text "${music.title}")
+                :text "${hypringo.media.title}")
             (label
                 :xalign "1"
                 :wrap "true"
                 :limit-width 15
                 :style 'font-size: 1em'
-                :text "${music.artist}")
+                :text "${hypringo.media.artist}")
             (box :space-evenly "false"
                 :orientation "h"
                 :style "margin-top: 8px"
                 :style "font-size: 3.5em"
                 (button :style "margin: 10px"
-                    :onclick "playerctl previous"
+                    :onclick "hypringo dispatch media previous"
                     "󰒮")
                 (button :style "margin: 10px"
-                    :onclick "playerctl play-pause"
-                    "${music.status == "Paused" ? "󰐊" : "󰏤"}")
+                    :onclick "hypringo dispatch media play-pause"
+                    "${hypringo.media.status == "paused" ? "󰐊" : "󰏤"}")
                 (button :style "margin: 10px"
-                    :onclick "playerctl next"
+                    :onclick "hypringo dispatch media next"
                     "󰒭")
             )
         )
     )
 )
 
-(deflisten music-cover "sh ~/.config/eww/scripts/get-music-cover.sh ~/.config/eww/cache_directory")
-(defpoll music :interval "2s" `playerctl metadata --format '{"title":"{{ markup_escape(xesam:title) }}","status":"{{ status }}","album":"{{ album }}","artist":"{{artist}}"}'`)
+(deflisten music-cover `hypringo-cover-listen`)
 (defwidget music []
     (eventbox
+        :visible {hypringo.media.available && hypringo.media.title != ""}
         :onclick "${mc-show ? "${EWW_CMD} update mc-show=false && ${EWW_CMD} close mcard":"${EWW_CMD} update mc-show=true && ${EWW_CMD} open mcard"}"
         (box :space-evenly "false"
             :vexpand "false"
             :hexpand "false"
             (box :vexpand "false"
                 :hexpand "false"
+                :valign "center"
                 :class "music-cover"
                 :style "background-image:url('${music-cover}');"
             )
             (label
                 :class "music-title"
-                :wrap "true"
+                :wrap "false"
                 :limit-width 15
-                :text "${music.title}")
+                :text "${hypringo.media.title}")
         )
     )
 )
 
-(defpoll weather :interval "10m" `curl -m 10 wttr.in/shenzhen?format='\\{"cond":"%c","temp":"%t","loc":"%l","wind":"%w","pressure":"%P","precip":"%p","temp_like":"%f"\\}'`)
 (defwidget weather []
     (eventbox
         (box :orientation "h"
             :space-evenly "true"
             :valign "center"
             :class "weather"
-            :tooltip "Location: ${weather.loc}
-Temperature (Feels Like): ${weather.temp_like}
-Wind: ${weather.wind}
-Pressure: ${weather.pressure}
-Precipitation: ${weather.precip}"
-            "${weather.cond}${weather.temp}"
+            :tooltip "Location: ${hypringo.weather.location}
+Temperature (Feels Like): ${hypringo.weather.feels_like}
+Wind: ${hypringo.weather.wind}
+Pressure: ${hypringo.weather.pressure}
+Precipitation: ${hypringo.weather.precipitation}
+Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "ready" : "unavailable")}"
+            "${hypringo.weather.condition}${hypringo.weather.temperature}"
         )
     )
 )
@@ -114,7 +117,6 @@ Precipitation: ${weather.precip}"
 ;; Widgets on Right
 
 (defvar gh-show "false")
-(defpoll gh-notifications :interval "1m" "gh api notifications")
 (defwidget gh-notifications [len]
     (box :orientation "h"
         :space-evenly "false"
@@ -128,7 +130,7 @@ Precipitation: ${weather.precip}"
     (box :class "gh-list"
         :orientation "v"
         :space-evenly "false"
-        (for notification in gh-notifications
+        (for notification in {hypringo.github.notifications}
             (gh-item :type "${notification.subject.type}"
                     :title "${notification.subject.title}"
                     :url "${notification.subject.url}")
@@ -178,8 +180,6 @@ Precipitation: ${weather.precip}"
     )
 )
 
-(defpoll volume :interval "1s" "volumectl | awk -F ' ' '{print substr($2, 0, length($2)-1)}'")
-(defpoll volume-status :interval "1s" "volumectl | awk -F ' ' '{print substr($3, 2, length($3)-2)}'")
 (defvar volum "false")
 (defwidget volum []
     (eventbox :onhover "${EWW_CMD} update volum=true"
@@ -191,23 +191,25 @@ Precipitation: ${weather.precip}"
                            :reveal volum
                            :duration "550ms"
                             (scale :class "volbar"
-                                :value "${volume}.0"
-                                :tooltip "Volume: ${volume} %"
-                                :onchange "volumectl set {}%"
+                                :value "${hypringo.audio.volume}.0"
+                                :tooltip "Volume: ${hypringo.audio.volume} %"
+                                :onchange "hypringo dispatch audio set-volume {}"
                                 :orientation "h"
                                 :max 100
                                 :min 0
                             )
                 )
-                (label :class "volume-icon" :text "${volume-status == "on" ? "墳" : "󰝟"}")
+                (button
+                    :onclick "hypringo dispatch audio toggle-mute"
+                    (label :class "volume-icon" :text "${hypringo.audio.muted ? "󰝟" : "󰕾"}"))
             )
     )
 )
 
-(defpoll brightness :interval "5s" "light | awk -F, '{print substr($0, 0, length($0)-3)}'")
 (defvar bright "false")
 (defwidget bright []
     (eventbox
+        :visible {hypringo.system.brightness.available}
         :onhover "${EWW_CMD} update bright=true"
         :onhoverlost "${EWW_CMD} update bright=false"
         (box :space-evenly "false"
@@ -215,12 +217,12 @@ Precipitation: ${weather.precip}"
              :hexpand "false"
              :spacing 2
             (revealer :transition "slideright"
-                      :reveal bright
+                      :reveal {bright && hypringo.system.brightness.capabilities.set}
                       :duration "550ms"
                         (scale :class "brightbar"
-                             :value "${brightness}.0"
-                             :tooltip "Brightness: ${brightness} %"
-                             :onchange "light -S {}"
+                             :value {hypringo.system.brightness.percent}
+                             :tooltip "Brightness: ${hypringo.system.brightness.percent}%"
+                             :onchange "hypringo dispatch brightness set {}"
                              :orientation "h"
                              :max 100
                              :min 0
@@ -231,18 +233,19 @@ Precipitation: ${weather.precip}"
     )
 )
 
-(defwidget battery [capacity status]
+(defwidget battery []
     (box :orientation "h"
+         :visible {hypringo.system.battery.available}
          :space-evenly "false"
         (label :class "battery"
                :valign "end"
-               :text "${status == "Charging" ? "􀢋" :
-                    capacity == 100 ? "􀛨" :
-                    (capacity > 75 ? "􀺸" :
-                    (capacity > 50 ? "􀺶" :
-                    (capacity > 25 ? "􀛩" :
-                    (capacity > 0 ? "􀛪" : "􀛪"))))}"
-               :tooltip "Battery: ${capacity}%")))
+               :text "${hypringo.system.battery.status == "Charging" ? "􀢋" :
+                    hypringo.system.battery.capacity == 100 ? "􀛨" :
+                    (hypringo.system.battery.capacity > 75 ? "􀺸" :
+                    (hypringo.system.battery.capacity > 50 ? "􀺶" :
+                    (hypringo.system.battery.capacity > 25 ? "􀛩" :
+                    (hypringo.system.battery.capacity > 0 ? "􀛪" : "􀛪"))))}"
+               :tooltip "Battery: ${hypringo.system.battery.capacity}% (${hypringo.system.battery.status})")))
 
 (defwidget tray []
     (systray :class "tray"
@@ -259,9 +262,8 @@ Precipitation: ${weather.precip}"
          (tray)
          (volum)
          (bright)
-         (gh-notifications :len {arraylength(gh-notifications)})
-         (battery :capacity {EWW_BATTERY['macsmc-battery']['capacity']}
-                    :status {EWW_BATTERY['macsmc-battery']['status']})
+         (gh-notifications :len {arraylength(hypringo.github.notifications)})
+         (battery)
          (cpu-graph :avg {EWW_CPU['avg']})
 ))
 
@@ -304,7 +306,7 @@ Precipitation: ${weather.precip}"
 )
 
 (defvar power false)
-(defvar lock "systemctl suspend")
+(defvar lock "~/.config/hypr/scripts/lock-screen.sh")
 
 (defwidget stats []
     (box :orientation "h"
@@ -325,21 +327,17 @@ Precipitation: ${weather.precip}"
 )
 
 ;; Widgets on Left
-(defvar active_window "") ;; rely on hypringo update
-(defvar active_workspace "") ;; rely on hypringo update
-(defvar workspaces "[]") ;; rely on hypringo update
-
 (defwidget workspaces [monitor-id]
-    (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace {} ${active_workspace}"
+    (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace.sh {} ${hypringo.hyprland.active_workspace.id}"
         (box :class "workspaces"
             :space-evenly true
             :orientation "h"
             :valign "center"
             :halign "start"
-            (for workspace in workspaces
-                (button :onclick "hyprctl dispatch workspace ${workspace.id}"
-                    :visible "${(workspace.windows > 0 || workspace.id == active_workspace) && monitor-id == workspace.monitorID}"
-                    :class "${workspace.id == active_workspace ? "current" : ""} workspace-entry"
+            (for workspace in {hypringo.hyprland.workspaces}
+                (button :onclick "hypringo dispatch workspace switch ${workspace.id}"
+                    :visible "${(workspace.windows > 0 || workspace.id == hypringo.hyprland.active_workspace.id) && workspace.monitor == hypringo.hyprland.monitors[monitor-id].name}"
+                    :class "${workspace.id == hypringo.hyprland.active_workspace.id ? "current" : ""} workspace-entry"
                     "${workspace.id}")
             )
         )
@@ -350,9 +348,9 @@ Precipitation: ${weather.precip}"
     (box :class "activewindow"
         :orientation "h"
         :space-evenly false
-        :visible "${active_window != ""}"
+        :visible "${hypringo.hyprland.active_window.title != ""}"
         (box :class "activewindow-arrow" "")
-        (label :text "${active_window}" :limit-width 15)
+        (label :text "${hypringo.hyprland.active_window.title}" :limit-width 15)
     )
 )
 
@@ -378,6 +376,8 @@ Precipitation: ${weather.precip}"
             :space-evenly "false"
             :orientation "h"
             :halign "center"
+            :valign "center"
+            :height 40
     (left :monitor-id monitor-id)
     (center)
     (right)))
@@ -385,11 +385,10 @@ Precipitation: ${weather.precip}"
 ;; Bar Windows
 (defwindow bar
     :monitor 1
-    :exclusive true
     :geometry (geometry :x "0"
-                        :y "6"
+                        :y "9"
                         :width "97.6%"
-                        :height "47"
+                        :height "40"
                         :anchor "top center")
     :stacking "fg"
     :wm-ignore false
@@ -399,11 +398,10 @@ Precipitation: ${weather.precip}"
 
 (defwindow builtin
     :monitor 0
-    :exclusive true
     :geometry (geometry :x "0"
-                        :y "6"
+                        :y "9"
                         :width "97.6%"
-                        :height "47"
+                        :height "40"
                         :anchor "top center")
     :stacking "fg"
     :wm-ignore false
@@ -438,4 +436,3 @@ Precipitation: ${weather.precip}"
                         :height "200")
     (mcardalbum)
 )
-

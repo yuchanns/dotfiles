@@ -4,3 +4,4 @@
 [submodule "Hypringo"]
 	path = Hypringo
 	url = https://github.com/yuchanns/Hypringo
+	branch = ltask-runtime
