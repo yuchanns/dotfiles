@@ -17,12 +17,18 @@ $magenta: #BB9AF7;
 $cyan: #7DCFFF;
 $white: $foreground;
 
-// EWW BAR
-.bar{
-  border-radius: 15;
-  background-color: rgba(26, 27, 38, 0.5);
+.bar-stage {
   min-height: 40px;
+}
+
+.bar-surface {
+  border-radius: 15px;
+  background-color: rgba(26, 27, 38, 0.5);
   padding: 0 1rem;
+}
+
+.bar-center {
+  margin: 0 1rem;
 }
 
 .center {
@@ -71,9 +77,15 @@ $white: $foreground;
     font-weight: bold;
 }
 
-.button-reboot, .button-off, .button-lock {
+.button-cancel, .button-reboot, .button-off, .button-lock {
     padding: .5rem .2rem .3rem .2rem;
 }
+
+.button-cancel {
+    color: $gray;
+    margin-right: .3rem;
+}
+
 .button-reboot {
     color: $yellow;
     font-size: .95em;
@@ -189,13 +201,123 @@ calendar:indeterminate {
     border: 2px solid $black;
 }
 
+.weather-card {
+    background-image: linear-gradient(135deg, rgba(36, 40, 59, .98), rgba(26, 27, 38, .98));
+    border: 2px solid rgba(122, 162, 247, .7);
+    border-radius: 18px;
+    color: $foreground;
+    font-family: "SF Pro Display";
+    padding: 1.25rem 1.4rem 1rem;
+}
+
+.weather-card-hero {
+    margin-bottom: .9rem;
+}
+
+.weather-card-condition {
+    color: $yellow;
+    font-family: "Noto Color Emoji";
+    font-size: 4.4em;
+    margin: 0 1.2rem 0 .4rem;
+    min-width: 88px;
+}
+
+.weather-card-summary {
+    min-width: 250px;
+}
+
+.weather-card-location {
+    color: $cyan;
+    font-size: 1.15em;
+    font-weight: bold;
+}
+
+.weather-card-temperature {
+    color: $white;
+    font-size: 2.8em;
+    font-weight: bold;
+    margin: -.15rem 0;
+}
+
+.weather-card-feels-like {
+    color: $gray;
+    font-size: .95em;
+}
+
+.weather-card-metrics {
+    border-top: 1px solid rgba(86, 95, 137, .65);
+    padding-top: .85rem;
+}
+
+.weather-card-metric {
+    background-color: rgba(86, 95, 137, .18);
+    border-radius: 12px;
+    margin: 0 .25rem;
+    min-width: 120px;
+    padding: .55rem .35rem;
+}
+
+.weather-card-metric-icon {
+    font-family: "JetBrainsMono Nerd Font";
+    font-size: 1.25em;
+    margin-bottom: .15rem;
+}
+
+.weather-card-wind {
+    color: $green;
+}
+
+.weather-card-pressure {
+    color: $magenta;
+}
+
+.weather-card-rain {
+    color: $blue;
+}
+
+.weather-card-metric-value {
+    color: $white;
+    font-size: 1em;
+    font-weight: bold;
+}
+
+.weather-card-metric-label {
+    color: $gray;
+    font-size: .75em;
+}
+
+.weather-card-status {
+    color: $gray;
+    font-size: .75em;
+    margin-top: .6rem;
+}
+
+.weather-card-status-dot {
+    color: $green;
+    font-size: .8em;
+    margin-right: .35rem;
+}
+
+.weather-card.is-stale .weather-card-status-dot {
+    color: $yellow;
+}
+
+.weather-card.is-unavailable .weather-card-status-dot {
+    color: $red;
+}
+
+.state-badge {
+    margin-left: .35rem;
+    font-size: .75em;
+}
+
 .cpu-graph {
     font-family: "SF Pro";
     font-weight: bold;
     color: $blue;
     font-size: 1.2em;
     padding: .2rem;
-    margin: .5rem 0 .5rem 1rem;
+    margin: .25rem 0 .25rem 1rem;
     background-color: rgba(86, 95, 137, 0.3);
     border: 2px solid $black;
     border-radius: 5px;
@@ -217,6 +339,37 @@ tooltip.background {
 
 tooltip label {
     margin: 6px;
+}
+
+.music-card {
+    background-repeat: no-repeat;
+    background-size: 100% 150%, contain;
+    background-position: 33.33% 0, 0 0;
+    border: 2px solid $background;
+    border-radius: 15px;
+}
+
+.music-card-content {
+    font-family: "SF Pro Display";
+    margin-right: 30px;
+}
+
+.music-card-title {
+    font-size: 1.4em;
+    font-weight: bold;
+}
+
+.music-card-artist {
+    font-size: 1em;
+}
+
+.music-card-controls {
+    font-size: 3.5em;
+    margin-top: 8px;
+}
+
+.music-card-button {
+    margin: 10px;
 }
 
 .music-cover {
@@ -254,9 +407,21 @@ tooltip label {
     color: $magenta;
 }
 
+.notification-badge {
+    background-color: $magenta;
+    border-radius: 10px;
+    color: $background;
+    font-family: "SF Pro";
+    font-size: .45em;
+    font-weight: bold;
+    margin-left: -.35rem;
+    min-width: 1.2rem;
+    padding: .05rem .25rem;
+}
+
 .gh-list {
     border: $magenta solid 2px;
-    border-radius: 10;
+    border-radius: 10px;
     background-color: $background;
     font-family: "SF Pro";
     font-size: 1.2em;
@@ -277,7 +442,7 @@ tooltip label {
     border-color: $yellow;
 }
 .gh-commit {
-    border-color: $white
+    border-color: $white;
 }
 .gh-icon {
     margin: .4rem;
@@ -296,6 +461,28 @@ tooltip label {
 }
 .gh-icon-commit {
     color: $white;
+}
+
+.health-indicator {
+    color: $yellow;
+    font-size: .65em;
+    margin-left: .4rem;
+}
+
+.is-error {
+    color: $red;
+}
+
+.is-stale {
+    opacity: .72;
+}
+
+.is-muted {
+    opacity: .58;
+}
+
+.is-unavailable {
+    opacity: .42;
 }
 
 .tray {

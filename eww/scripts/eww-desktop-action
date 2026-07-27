@@ -1,0 +1,174 @@
+#!/bin/sh
+set -eu
+
+eww_binary=${EWW_BIN:-eww}
+eww_config=${EWW_CONFIG_DIR:-"$HOME/.config/eww"}
+hypringo_binary=${HYPRINGO_BIN:-hypringo}
+
+eww_command() {
+	"$eww_binary" -c "$eww_config" "$@"
+}
+
+popup_window() {
+	case "$1" in
+	calendar)
+		printf 'calendar\n'
+		;;
+	github)
+		printf 'ghn\n'
+		;;
+	music)
+		printf 'mcard\n'
+		;;
+	weather)
+		printf 'wcard\n'
+		;;
+	*)
+		return 1
+		;;
+	esac
+}
+
+popup_is_open() {
+	printf '%s\n' "$1" | grep -Fqx "$2: $2"
+}
+
+toggle_popup() {
+	popup=$1
+	monitor_name=$2
+	case "$monitor_name" in
+	"" | *[!A-Za-z0-9._-]*)
+		printf 'eww-desktop-action: invalid monitor name\n' >&2
+		return 2
+		;;
+	esac
+
+	selected_window=$(popup_window "$popup") || {
+		printf 'eww-desktop-action: unsupported popup: %s\n' "$popup" >&2
+		return 2
+	}
+	active_windows=$(eww_command active-windows)
+	if popup_is_open "$active_windows" "$selected_window"; then
+		eww_command close "$selected_window"
+		eww_command update active-popup=
+		return
+	fi
+
+	for window in calendar ghn mcard wcard; do
+		if popup_is_open "$active_windows" "$window"; then
+			eww_command close "$window"
+		fi
+	done
+	eww_command open "$selected_window" --screen "$monitor_name"
+	eww_command update "active-popup=$popup"
+}
+
+scroll_workspace() {
+	direction=$1
+	monitor_name=$2
+	case "$direction" in
+	up)
+		offset=-1
+		;;
+	down)
+		offset=1
+		;;
+	*)
+		printf 'eww-desktop-action: unsupported scroll direction: %s\n' \
+			"$direction" >&2
+		return 2
+		;;
+	esac
+	case "$monitor_name" in
+	"" | *[!A-Za-z0-9._-]*)
+		printf 'eww-desktop-action: invalid monitor name\n' >&2
+		return 2
+		;;
+	esac
+
+	current=$(
+		"$hypringo_binary" status |
+			jq -er --arg monitor "$monitor_name" '
+				.state.hyprland.monitors[]
+				| select(.name == $monitor)
+				| .active_workspace.id
+			'
+	)
+	target=$((current + offset))
+	if [ "$target" -lt 1 ]; then
+		target=1
+	elif [ "$target" -gt 10 ]; then
+		target=10
+	fi
+	if [ "$target" -ne "$current" ]; then
+		"$hypringo_binary" dispatch workspace switch "$target"
+	fi
+}
+
+open_github() {
+	api_url=$1
+	case "$api_url" in
+	https://api.github.com/repos/*)
+		;;
+	*)
+		printf 'eww-desktop-action: rejected GitHub API URL\n' >&2
+		return 2
+		;;
+	esac
+
+	html_url=$(gh api "$api_url" --jq '.html_url // empty')
+	case "$html_url" in
+	https://github.com/*)
+		xdg-open "$html_url" >/dev/null 2>&1 &
+		;;
+	*)
+		printf 'eww-desktop-action: GitHub response has no safe HTML URL\n' >&2
+		return 1
+		;;
+	esac
+}
+
+power_action() {
+	action=$1
+	case "$action" in
+	lock)
+		exec "$HOME/.config/hypr/scripts/lock-screen.sh"
+		;;
+	reboot)
+		eww_command update power-confirm=none
+		exec systemctl reboot
+		;;
+	poweroff)
+		eww_command update power-confirm=none
+		exec systemctl poweroff
+		;;
+	*)
+		printf 'eww-desktop-action: unsupported power action: %s\n' \
+			"$action" >&2
+		return 2
+		;;
+	esac
+}
+
+case "${1:-}" in
+popup)
+	[ "$#" -eq 3 ] || exit 2
+	toggle_popup "$2" "$3"
+	;;
+workspace-scroll)
+	[ "$#" -eq 3 ] || exit 2
+	scroll_workspace "$2" "$3"
+	;;
+open-github)
+	[ "$#" -eq 2 ] || exit 2
+	open_github "$2"
+	;;
+power)
+	[ "$#" -eq 2 ] || exit 2
+	power_action "$2"
+	;;
+*)
+	printf 'Usage: eww-desktop-action {popup|workspace-scroll|open-github|power} ...\n' >&2
+	exit 2
+	;;
+esac

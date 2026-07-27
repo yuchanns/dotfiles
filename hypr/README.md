@@ -1,7 +1,8 @@
 # Hyprland
 
 Hyprland startup invokes only `~/.local/bin/hypringo-session`. The helper
-starts `hypringo.service`, swww, and Eww idempotently. Do not start the legacy
+starts `hypringo.service`, swww, and the supervised `hypringo-eww.service`
+idempotently. Do not start the legacy
 `hypringo.sh` or `main.lua` at the same time, because that creates duplicate
 state sources and competing window lifecycles.
 
@@ -9,7 +10,7 @@ Install the helper from the [Hypringo](../Hypringo) submodule:
 
 ```bash
 install -Dm755 Hypringo/contrib/hyprland/hypringo-session ~/.local/bin/hypringo-session
-systemctl --user enable hypringo.service
+systemctl --user enable hypringo.service hypringo-eww.service
 systemctl --user enable hypridle.service
 ```
 
