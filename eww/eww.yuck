@@ -1,7 +1,15 @@
 (include "./hypringo.yuck")
 
-;; Calendar Widget
-(defpoll date :interval "1m" `env LANG=en.US date '+{"year":"%Y","week":"%a","day":"%d","month":"%b","hour":"%H","min":"%M"}'`)
+;; Shared state
+(defpoll date
+    :interval "1m"
+    :initial "{\"year\":\"\",\"week\":\"\",\"day\":\"\",\"month\":\"\",\"hour\":\"\",\"min\":\"\"}"
+    `env LANG=en.US date '+{"year":"%Y","week":"%a","day":"%d","month":"%b","hour":"%H","min":"%M"}'`)
+(defvar active-popup "")
+(defvar volume-expanded false)
+(defvar brightness-expanded false)
+(defvar power-expanded false)
+(defvar power-confirm "none")
 
 (defwidget cal []
     (box :class "calendar-box"
@@ -16,45 +24,45 @@
     )
 )
 
-;; Widgets on Center
-(defvar mc-show "false")
 (defwidget mcardalbum []
     (box :vexpand "false"
         :hexpand "false"
+        :class "music-card"
         :style "background-image:linear-gradient(to right, rgba(36, 40, 59, 0), rgba(36, 40, 59, 1) 46%), url('${music-cover}'); 
-        background-repeat: no-repeat;
-        background-size: 100% 150%, contain; 
-        background-position: 33.33% 0, 0 0;
-        border-radius: 15px; border: 2px solid rgba(26, 27, 38, 1)"
+                background-repeat:no-repeat;
+                background-size:100% 150%, contain;
+                background-position:33.33% 0, 0 0;"
         (box :space-evenly "false"
             :orientation "v"
             :halign "end"
             :valign "center"
-            :style "font-family: SF Pro Display; margin-right: 30px"
+            :class "music-card-content"
             (label
                 :xalign "1"
                 :wrap "true"
                 :limit-width 15
-                :style "font-weight: bold; font-size: 1.4em"
+                :class "music-card-title"
                 :text "${hypringo.media.title}")
             (label
                 :xalign "1"
                 :wrap "true"
                 :limit-width 15
-                :style 'font-size: 1em'
+                :class "music-card-artist"
                 :text "${hypringo.media.artist}")
             (box :space-evenly "false"
                 :orientation "h"
-                :style "margin-top: 8px"
-                :style "font-size: 3.5em"
-                (button :style "margin: 10px"
-                    :onclick "hypringo dispatch media previous"
+                :class "music-card-controls"
+                (button
+                    :class "music-card-button ${hypringo.media.capabilities.previous ? "" : "is-unavailable"}"
+                    :onclick "${hypringo.media.capabilities.previous ? "hypringo dispatch media previous" : "true"}"
                     "󰒮")
-                (button :style "margin: 10px"
-                    :onclick "hypringo dispatch media play-pause"
+                (button
+                    :class "music-card-button ${hypringo.media.capabilities.play_pause ? "" : "is-unavailable"}"
+                    :onclick "${hypringo.media.capabilities.play_pause ? "hypringo dispatch media play-pause" : "true"}"
                     "${hypringo.media.status == "paused" ? "󰐊" : "󰏤"}")
-                (button :style "margin: 10px"
-                    :onclick "hypringo dispatch media next"
+                (button
+                    :class "music-card-button ${hypringo.media.capabilities.next ? "" : "is-unavailable"}"
+                    :onclick "${hypringo.media.capabilities.next ? "hypringo dispatch media next" : "true"}"
                     "󰒭")
             )
         )
@@ -62,13 +70,16 @@
 )
 
 (deflisten music-cover `hypringo-cover-listen`)
-(defwidget music []
+(defwidget music [monitor-name]
     (eventbox
         :visible {hypringo.media.available && hypringo.media.title != ""}
-        :onclick "${mc-show ? "${EWW_CMD} update mc-show=false && ${EWW_CMD} close mcard":"${EWW_CMD} update mc-show=true && ${EWW_CMD} open mcard"}"
+        :onclick "eww-desktop-action popup music ${monitor-name}"
+        :tooltip "${hypringo.media.title}
+${hypringo.media.artist}"
         (box :space-evenly "false"
             :vexpand "false"
             :hexpand "false"
+            :class "${hypringo.media.connected ? "" : "is-unavailable"}"
             (box :vexpand "false"
                 :hexpand "false"
                 :valign "center"
@@ -84,46 +95,105 @@
     )
 )
 
-(defwidget weather []
+(defwidget weather-card []
+    (box :orientation "v"
+        :space-evenly "false"
+        :class "weather-card ${hypringo.weather.available ? (hypringo.weather.stale ? "is-stale" : "") : "is-unavailable"}"
+        (box :orientation "h"
+            :space-evenly "false"
+            :class "weather-card-hero"
+            (label
+                :class "weather-card-condition"
+                :valign "center"
+                :text "${hypringo.weather.available ? hypringo.weather.condition : "󰖐"}")
+            (box :orientation "v"
+                :space-evenly "false"
+                :valign "center"
+                :class "weather-card-summary"
+                (label
+                    :class "weather-card-location"
+                    :xalign 0
+                    :limit-width 26
+                    :text "${hypringo.weather.location != "" ? hypringo.weather.location : "Weather unavailable"}")
+                (label
+                    :class "weather-card-temperature"
+                    :xalign 0
+                    :text "${hypringo.weather.temperature != "" ? hypringo.weather.temperature : "--"}")
+                (label
+                    :class "weather-card-feels-like"
+                    :xalign 0
+                    :text "Feels like ${hypringo.weather.feels_like != "" ? hypringo.weather.feels_like : "--"}")))
+        (box :orientation "h"
+            :space-evenly "true"
+            :class "weather-card-metrics"
+            (box :orientation "v"
+                :class "weather-card-metric"
+                (label :class "weather-card-metric-icon weather-card-wind" :text "󰖝")
+                (label :class "weather-card-metric-value" :text "${hypringo.weather.wind != "" ? hypringo.weather.wind : "--"}")
+                (label :class "weather-card-metric-label" :text "Wind"))
+            (box :orientation "v"
+                :class "weather-card-metric"
+                (label :class "weather-card-metric-icon weather-card-pressure" :text "󰓅")
+                (label :class "weather-card-metric-value" :text "${hypringo.weather.pressure != "" ? hypringo.weather.pressure : "--"}")
+                (label :class "weather-card-metric-label" :text "Pressure"))
+            (box :orientation "v"
+                :class "weather-card-metric"
+                (label :class "weather-card-metric-icon weather-card-rain" :text "󰖗")
+                (label :class "weather-card-metric-value" :text "${hypringo.weather.precipitation != "" ? hypringo.weather.precipitation : "--"}")
+                (label :class "weather-card-metric-label" :text "Precipitation")))
+        (box :orientation "h"
+            :space-evenly "false"
+            :halign "end"
+            :class "weather-card-status"
+            (label
+                :class "weather-card-status-dot"
+                :text "●")
+            (label
+                :text "${hypringo.weather.stale ? "Last known conditions" : (hypringo.weather.available ? "Live conditions" : "Data unavailable")}")))
+)
+
+(defwidget weather [monitor-name]
     (eventbox
+        :onclick "eww-desktop-action popup weather ${monitor-name}"
         (box :orientation "h"
             :space-evenly "true"
             :valign "center"
-            :class "weather"
-            :tooltip "Location: ${hypringo.weather.location}
-Temperature (Feels Like): ${hypringo.weather.feels_like}
-Wind: ${hypringo.weather.wind}
-Pressure: ${hypringo.weather.pressure}
-Precipitation: ${hypringo.weather.precipitation}
-Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "ready" : "unavailable")}"
-            "${hypringo.weather.condition}${hypringo.weather.temperature}"
+            :class "weather ${hypringo.weather.available ? (hypringo.weather.stale ? "is-stale" : "") : "is-unavailable"}"
+            (label :text "${hypringo.weather.condition}${hypringo.weather.temperature}")
+            (label :visible {hypringo.weather.stale || !hypringo.weather.available}
+                :class "state-badge"
+                :text "${hypringo.weather.stale ? "󰏤" : "󰅙"}")
         )
     )
 )
 
-;; Center Widgets
-(defwidget center []
+(defwidget center [monitor-name]
    (box :orientation "h"
         :space-evenly "false"
         :halign "center"
         :hexpand "false"
         :vexpand "false"
         :class "center"
-        (weather :vexpand "false")
-        (music :vexpand "false")
+        (weather :monitor-name monitor-name :vexpand "false")
+        (music :monitor-name monitor-name :vexpand "false")
     )
 )
 
-;; Widgets on Right
-
-(defvar gh-show "false")
-(defwidget gh-notifications [len]
+(defwidget gh-notifications [len monitor-name]
     (box :orientation "h"
         :space-evenly "false"
-        (button :onclick "${gh-show ? "${EWW_CMD} update gh-show=false && ${EWW_CMD} close ghn":"${EWW_CMD} update gh-show=true && ${EWW_CMD} open ghn"}"
-         (label :class "gh-notifications"
-            :text "${len > 0 ? "􀝗" : "􀋚"}")
-         )
+        (button
+            :class "${hypringo.github.available ? (hypringo.github.stale ? "is-stale" : "") : "is-unavailable"}"
+            :onclick "eww-desktop-action popup github ${monitor-name}"
+            :tooltip "GitHub notifications: ${len}
+Status: ${hypringo.github.stale ? "stale" : (hypringo.github.available ? "ready" : "unavailable")}"
+            (box :orientation "h"
+                :space-evenly "false"
+                (label :class "gh-notifications"
+                    :text "${len > 0 ? "􀝗" : "􀋚"}")
+                (label :visible {len > 0}
+                    :class "notification-badge"
+                    :text "${len > 99 ? "99+" : len}")))
     )
 )
 (defwidget gh-list []
@@ -153,7 +223,9 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
                 (type == "PullRequest") ? "":
                 (type == "Commit") ? "􀡚" :
                 (type == "Release") ? "" : "􀂓"}")
-            (button :onclick "gh api ${url} | jq .html_url | xargs xdg-open &"
+            (button
+                :onclick "eww-desktop-action open-github ${url}"
+                :tooltip title
                 (label
                     :limit-width 30
                     :text title)
@@ -170,7 +242,7 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
                 :height 5
                 :width 45
                 :value avg
-                :max 20
+                :max 100
                 :min 0
                 :dynamic "true"
                 :thickness "2"
@@ -180,45 +252,45 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
     )
 )
 
-(defvar volum "false")
 (defwidget volum []
-    (eventbox :onhover "${EWW_CMD} update volum=true"
-              :onhoverlost "${EWW_CMD} update volum=false"
-            (box :orientation "h"
-                 :space-evenly "false"
-                 :spacing "2"
-                 (revealer :transition "slideright"
-                           :reveal volum
-                           :duration "550ms"
-                            (scale :class "volbar"
-                                :value "${hypringo.audio.volume}.0"
-                                :tooltip "Volume: ${hypringo.audio.volume} %"
-                                :onchange "hypringo dispatch audio set-volume {}"
-                                :orientation "h"
-                                :max 100
-                                :min 0
-                            )
-                )
-                (button
-                    :onclick "hypringo dispatch audio toggle-mute"
-                    (label :class "volume-icon" :text "${hypringo.audio.muted ? "󰝟" : "󰕾"}"))
-            )
+    (eventbox
+        :onhover "${EWW_CMD} update volume-expanded=true"
+        :onhoverlost "${EWW_CMD} update volume-expanded=false"
+        (box :orientation "h"
+            :space-evenly "false"
+            :spacing 2
+            :class "${hypringo.audio.available ? (hypringo.audio.muted ? "is-muted" : "") : "is-unavailable"}"
+            (revealer :transition "slideright"
+                :reveal {volume-expanded && hypringo.audio.capabilities.set_volume}
+                :duration "550ms"
+                (scale :class "volbar"
+                    :value "${hypringo.audio.volume}.0"
+                    :tooltip "Volume: ${hypringo.audio.volume}%"
+                    :onchange "hypringo dispatch audio set-volume {}"
+                    :orientation "h"
+                    :max 100
+                    :min 0))
+            (button
+                :onclick "${hypringo.audio.capabilities.toggle_mute ? "hypringo dispatch audio toggle-mute" : "true"}"
+                :tooltip "${hypringo.audio.available ? "Toggle mute" : "Audio unavailable"}"
+                (label :class "volume-icon"
+                    :text "${hypringo.audio.muted ? "󰝟" : "󰕾"}")))
     )
 )
 
-(defvar bright "false")
 (defwidget bright []
     (eventbox
         :visible {hypringo.system.brightness.available}
-        :onhover "${EWW_CMD} update bright=true"
-        :onhoverlost "${EWW_CMD} update bright=false"
-        (box :space-evenly "false"
-             :orientation "h"
-             :hexpand "false"
-             :spacing 2
+        :onhover "${EWW_CMD} update brightness-expanded=true"
+        :onhoverlost "${EWW_CMD} update brightness-expanded=false"
+        (box
+            :space-evenly "false"
+            :orientation "h"
+            :hexpand "false"
+            :spacing 2
             (revealer :transition "slideright"
-                      :reveal {bright && hypringo.system.brightness.capabilities.set}
-                      :duration "550ms"
+                :reveal {brightness-expanded && hypringo.system.brightness.capabilities.set}
+                :duration "550ms"
                         (scale :class "brightbar"
                              :value {hypringo.system.brightness.percent}
                              :tooltip "Brightness: ${hypringo.system.brightness.percent}%"
@@ -226,10 +298,8 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
                              :orientation "h"
                              :max 100
                              :min 0
-                        )
-            )
-            (label :class "brightness-icon" :text "󰃠")
-        )
+                        ))
+            (label :class "brightness-icon" :text "󰃠"))
     )
 )
 
@@ -249,86 +319,123 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
 
 (defwidget tray []
     (systray :class "tray"
-             :pack-direction "ttb"
              :spacing 4
              :space-evenly false
              :icon-size 20
              :prepend-new true))
 
-(defwidget control []
+(defwidget health-indicator []
+    (label
+        :visible {!hypringo.runtime.ready
+            || hypringo.runtime.last_reload_error != ""
+            || hypringo.hyprland.error != ""
+            || hypringo.audio.error != ""
+            || hypringo.system.error != ""
+            || hypringo.weather.stale
+            || hypringo.github.stale}
+        :class "health-indicator ${(!hypringo.runtime.ready
+            || hypringo.runtime.last_reload_error != ""
+            || hypringo.hyprland.error != ""
+            || hypringo.audio.error != ""
+            || hypringo.system.error != "") ? "is-error" : "is-stale"}"
+        :tooltip "Runtime: ${hypringo.runtime.ready ? "ready" : "not ready"}
+Reload: ${hypringo.runtime.last_reload_error}
+Hyprland: ${hypringo.hyprland.error}
+Audio: ${hypringo.audio.error}
+System: ${hypringo.system.error}
+Weather: ${hypringo.weather.stale ? "stale" : "ready"}
+GitHub: ${hypringo.github.stale ? "stale" : "ready"}"
+        :text "${(!hypringo.runtime.ready
+            || hypringo.runtime.last_reload_error != ""
+            || hypringo.hyprland.error != ""
+            || hypringo.audio.error != ""
+            || hypringo.system.error != "") ? "󰅙" : "󰏤"}"))
+
+(defwidget control [monitor-name]
     (box :orientation "h"
          :space-evenly "false"
          :class "control"
          (tray)
          (volum)
          (bright)
-         (gh-notifications :len {arraylength(hypringo.github.notifications)})
+         (gh-notifications
+            :len {arraylength(hypringo.github.notifications)}
+            :monitor-name monitor-name)
          (battery)
          (cpu-graph :avg {EWW_CPU['avg']})
+         (health-indicator)
 ))
 
-(defvar calendar "false")
-(defwidget time []
+(defwidget time [monitor-name]
     (box :orientation "h"
          :class "time"
          :halign "end"
-        (button :onclick "${calendar ?
-                "${EWW_CMD} update calendar=false && ${EWW_CMD} close calendar" :
-                "${EWW_CMD} update calendar=true && ${EWW_CMD} open calendar"}"
+        (button :onclick "eww-desktop-action popup calendar ${monitor-name}"
                 "${date.week} ${date.day}. ${date.month} ${date.hour}:${date.min}")))
 
 (defwidget power []
-    (eventbox :onhover "${EWW_CMD} update power=true"
-              :onhoverlost "${EWW_CMD} update power=false"
-            (box :orientation "h"
-                :space-evenly "false"
-                :hexpand "false"
-                :class "powermenu"
-                (revealer :transition "slideright"
-                          :reveal power
-                          :duration "550ms"
-                    (box :orientation "h"
-                         :space-evenly "false"
-                        (button :class "button-lock"
-                                :tooltip "Lock"
-                                :onclick "${lock}"
-                                "")
-                        (button :class "button-reboot"
-                                :tooltip "Reboot"
-                                :onclick "reboot" "")
-                    )
-                )
-                (button :class "button-off"
-                    :tooltip "Shutdown"
-                    :onclick "shutdown now" "⏻")
-            )
+    (eventbox
+        :onhover "${EWW_CMD} update power-expanded=true"
+        :onhoverlost "${EWW_CMD} update power-expanded=false power-confirm=none"
+        (box :orientation "h"
+            :space-evenly "false"
+            :hexpand "false"
+            :class "powermenu"
+            (revealer :transition "slideright"
+                :reveal power-expanded
+                :duration "550ms"
+                (box :orientation "h"
+                    :space-evenly "false"
+                    (button
+                        :visible {power-confirm == "none"}
+                        :class "button-lock"
+                        :tooltip "Lock"
+                        :onclick "eww-desktop-action power lock"
+                        "")
+                    (button
+                        :visible {power-confirm == "none"}
+                        :class "button-reboot"
+                        :tooltip "Reboot"
+                        :onclick "${EWW_CMD} update power-confirm=reboot"
+                        "")
+                    (button
+                        :visible {power-confirm != "none"}
+                        :class "button-cancel"
+                        :tooltip "Cancel"
+                        :onclick "${EWW_CMD} update power-confirm=none"
+                        "󰜺")
+                    (button
+                        :visible {power-confirm != "none"}
+                        :class "${power-confirm == "reboot" ? "button-reboot" : "button-off"}"
+                        :tooltip "${power-confirm == "reboot" ? "Confirm reboot" : "Confirm shutdown"}"
+                        :onclick "${power-confirm == "reboot" ? "eww-desktop-action power reboot" : "eww-desktop-action power poweroff"}"
+                        "${power-confirm == "reboot" ? "" : "⏻"}")))
+            (button :class "button-off"
+                :tooltip "Shutdown"
+                :onclick "${EWW_CMD} update power-expanded=true power-confirm=poweroff"
+                "⏻"))
     )
 )
 
-(defvar power false)
-(defvar lock "~/.config/hypr/scripts/lock-screen.sh")
-
-(defwidget stats []
+(defwidget stats [monitor-name]
     (box :orientation "h"
          :space-evenly "false"
-         (time)
+         (time :monitor-name monitor-name)
          (power)
     )
 )
 
-;; Right Widgets
-(defwidget right []
+(defwidget right [monitor-name]
     (box :orientation "h"
          :space-evenly "false"
          :halign "end"
          :spacing 5
-         (control)
-         (stats))
+         (control :monitor-name monitor-name)
+         (stats :monitor-name monitor-name))
 )
 
-;; Widgets on Left
-(defwidget workspaces [monitor-id]
-    (eventbox :onscroll "sh ~/.config/eww/scripts/change-active-workspace.sh {} ${hypringo.hyprland.active_workspace.id}"
+(defwidget workspaces [monitor-name]
+    (eventbox :onscroll "eww-desktop-action workspace-scroll {} ${monitor-name}"
         (box :class "workspaces"
             :space-evenly true
             :orientation "h"
@@ -336,19 +443,21 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
             :halign "start"
             (for workspace in {hypringo.hyprland.workspaces}
                 (button :onclick "hypringo dispatch workspace switch ${workspace.id}"
-                    :visible "${(workspace.windows > 0 || workspace.id == hypringo.hyprland.active_workspace.id) && workspace.monitor == hypringo.hyprland.monitors[monitor-id].name}"
+                    :visible "${(workspace.windows > 0 || workspace.id == hypringo.hyprland.active_workspace.id) && workspace.monitor == monitor-name}"
                     :class "${workspace.id == hypringo.hyprland.active_workspace.id ? "current" : ""} workspace-entry"
+                    :tooltip "${workspace.last_window_title}"
                     "${workspace.id}")
             )
         )
     )
 )
 
-(defwidget activewindow []
+(defwidget activewindow [monitor-name]
     (box :class "activewindow"
         :orientation "h"
         :space-evenly false
-        :visible "${hypringo.hyprland.active_window.title != ""}"
+        :visible "${hypringo.hyprland.active_window.title != "" && hypringo.hyprland.active_workspace.monitor == monitor-name}"
+        :tooltip "${hypringo.hyprland.active_window.title}"
         (box :class "activewindow-arrow" "")
         (label :text "${hypringo.hyprland.active_window.title}" :limit-width 15)
     )
@@ -361,30 +470,33 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
          :halign "start"
          ""))
 
-;; Left Widgets
-(defwidget left [monitor-id]
+(defwidget left [monitor-name]
     (box :orientation "h"
          :space-evenly "false"
          :halign "start"
-(logo)
-(workspaces :monitor-id monitor-id)
-(activewindow)))
+        (logo)
+        (workspaces :monitor-name monitor-name)
+        (activewindow :monitor-name monitor-name)))
 
-;; Bar Widgets
-(defwidget bar [monitor-id]
-    (box :class "bar"
-            :space-evenly "false"
-            :orientation "h"
+(defwidget bar-content [monitor-name]
+    (box :class "bar-stage"
+        :hexpand true
+        :vexpand false
+        :valign "center"
+        (centerbox :class "bar-surface"
             :halign "center"
-            :valign "center"
-            :height 40
-    (left :monitor-id monitor-id)
-    (center)
-    (right)))
+            :hexpand false
+            (box :class "bar-left"
+                :halign "start"
+                (left :monitor-name monitor-name))
+            (box :class "bar-center"
+                :halign "center"
+                (center :monitor-name monitor-name))
+            (box :class "bar-right"
+                :halign "end"
+                (right :monitor-name monitor-name)))))
 
-;; Bar Windows
-(defwindow bar
-    :monitor 1
+(defwindow bar [monitor-name]
     :geometry (geometry :x "0"
                         :y "9"
                         :width "97.6%"
@@ -394,45 +506,34 @@ Status: ${hypringo.weather.stale ? "stale" : (hypringo.weather.available ? "read
     :wm-ignore false
     :hexpand "false"
     :vexpand "false"
-(bar :monitor-id 1))
+(bar-content :monitor-name monitor-name))
 
-(defwindow builtin
-    :monitor 0
-    :geometry (geometry :x "0"
-                        :y "9"
-                        :width "97.6%"
-                        :height "40"
-                        :anchor "top center")
-    :stacking "fg"
-    :wm-ignore false
-    :hexpand "false"
-    :vexpand "false"
-(bar :monitor-id 0))
-
-;; Calendar Windows
 (defwindow calendar
-    :monitor 0
     :geometry (geometry :x "80%"
                         :y "70"
                         :width "60"
                         :height "270")
 (cal))
 
-;; Github Notifications Window
 (defwindow ghn
-    :monitor 0
     :geometry (geometry :x "72%"
                         :y "70"
                         :width "150")
     (gh-list)
 )
 
-;; Music Card
 (defwindow mcard
-    :monitor 0
     :geometry (geometry :x "40%"
                         :y "60"
                         :width "430"
                         :height "200")
     (mcardalbum)
+)
+
+(defwindow wcard
+    :geometry (geometry :x "38%"
+                        :y "60"
+                        :width "460"
+                        :height "250")
+    (weather-card)
 )

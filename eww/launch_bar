@@ -1,31 +1,5 @@
-#!/bin/bash
+#!/bin/sh
+set -eu
 
-## Files and cmd
-FILE="$HOME/.cache/eww_launch.xyz"
-EWW="/usr/bin/eww -c $HOME/.config/eww"
-
-export LANG=en.US
-
-## Run eww daemon if not running already
-if [[ ! `pidof eww` ]]; then
-	${EWW} daemon
-	sleep 1
-fi
-
-## Open widgets 
-run_eww() {
-	touch "$FILE"
-	${EWW} open-many \
-         bar \
-         builtin
-        
-}
-
-## Launch or close widgets accordingly
-if [[ ! -f "$FILE" ]]; then
-	run_eww 
-else
-	${EWW} close-all && killall eww
-	rm "$FILE"
-    run_eww
-fi
+systemctl --user start hypringo.service
+systemctl --user start hypringo-eww.service
