@@ -187,13 +187,8 @@ ${hypringo.media.artist}"
             :onclick "eww-desktop-action popup github ${monitor-name}"
             :tooltip "GitHub notifications: ${len}
 Status: ${hypringo.github.stale ? "stale" : (hypringo.github.available ? "ready" : "unavailable")}"
-            (box :orientation "h"
-                :space-evenly "false"
-                (label :class "gh-notifications"
-                    :text "${len > 0 ? "􀝗" : "􀋚"}")
-                (label :visible {len > 0}
-                    :class "notification-badge"
-                    :text "${len > 99 ? "99+" : len}")))
+            (label :class "gh-notifications"
+                :text "${len > 0 ? "􀝗" : "􀋚"}"))
     )
 )
 (defwidget gh-list []
