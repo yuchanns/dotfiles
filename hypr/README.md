@@ -1,5 +1,12 @@
 # Hyprland
 
+Hyprland 0.57 uses `hyprland.lua`; the previous `hyprland.conf` is kept for
+reference. Install the Lua configuration before starting the session:
+
+```bash
+install -Dm644 hypr/hyprland.lua ~/.config/hypr/hyprland.lua
+```
+
 Hyprland startup invokes only `~/.local/bin/hypringo-session`. The helper
 starts `hypringo.service`, swww, and the supervised `hypringo-eww.service`
 idempotently. Do not start the legacy

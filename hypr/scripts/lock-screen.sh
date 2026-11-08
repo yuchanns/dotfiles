@@ -11,10 +11,10 @@ if pgrep -x hyprlock >/dev/null; then
 fi
 
 if [[ "$restore" == true ]]; then
-  hyprctl --instance 0 'keyword misc:allow_session_lock_restore 1' >/dev/null 2>&1 || true
+  hyprctl --instance 0 eval 'hl.config({misc={allow_session_lock_restore=true}})'  >/dev/null 2>&1 || true
 fi
 
-if hyprctl --instance 0 'dispatch exec hyprlock' >/dev/null 2>&1; then
+if hyprctl --instance 0 dispatch 'hl.dsp.exec_cmd("hyprlock")'  >/dev/null 2>&1; then
   exit 0
 fi
 
