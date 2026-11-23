@@ -46,3 +46,9 @@ inline actions. Reboot and poweroff require a second, explicit confirmation
 click. `eww-desktop-action` validates the finite popup, workspace-scroll,
 GitHub-link, and power action set before invoking the corresponding trusted
 command.
+
+GitHub notification clicks resolve the API URL and launch the default browser
+in the background so Eww's button-command timeout does not interrupt the request.
+The API lookup is bounded to 15 seconds using GNU `timeout`; failures are recorded
+in `${XDG_CACHE_HOME:-~/.cache}/eww/github-open.log`.
+Run `python3 eww/tests/github-open.py` to verify delayed lookups and URL validation.

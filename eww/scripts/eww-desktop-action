@@ -105,6 +105,20 @@ scroll_workspace() {
 	fi
 }
 
+resolve_and_open_github() {
+	api_url=$1
+	html_url=$(timeout --kill-after=1s 15s gh api "$api_url" --jq '.html_url // empty')
+	case "$html_url" in
+	https://github.com/*)
+		xdg-open "$html_url"
+		;;
+	*)
+		printf 'eww-desktop-action: GitHub response has no safe HTML URL\n' >&2
+		return 1
+		;;
+	esac
+}
+
 open_github() {
 	api_url=$1
 	case "$api_url" in
@@ -116,16 +130,11 @@ open_github() {
 		;;
 	esac
 
-	html_url=$(gh api "$api_url" --jq '.html_url // empty')
-	case "$html_url" in
-	https://github.com/*)
-		xdg-open "$html_url" >/dev/null 2>&1 &
-		;;
-	*)
-		printf 'eww-desktop-action: GitHub response has no safe HTML URL\n' >&2
-		return 1
-		;;
-	esac
+	# Eww gives button commands a short timeout. Detach the whole network lookup,
+	# not just the browser launch, and close the inherited pipes immediately.
+	log_dir=${XDG_CACHE_HOME:-"$HOME/.cache"}/eww
+	mkdir -p "$log_dir"
+	resolve_and_open_github "$api_url" </dev/null >>"$log_dir/github-open.log" 2>&1 &
 }
 
 power_action() {
